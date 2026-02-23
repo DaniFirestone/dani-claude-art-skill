@@ -1,0 +1,16 @@
+{
+  "name": "claude-art-skill",
+  "version": "1.0.0",
+  "description": "Complete visual content system for Claude Code — 15 workflows, 4 AI models, aesthetic routing, and brand customization.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aplaceforallmystuff/claude-art-skill"
+  },
+  "keywords": [
+    "claude-code-plugin",
+    "image-generation",
+    "ai-art",
+    "visual-content"
+  ]
+}

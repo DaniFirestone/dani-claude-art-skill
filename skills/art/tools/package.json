@@ -1,0 +1,10 @@
+{
+  "name": "art-tools",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "replicate": "^1.0.0",
+    "openai": "^4.0.0",
+    "@google/genai": "^0.7.0"
+  }
+}
