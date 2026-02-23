@@ -1,6 +1,11 @@
 # claude-art-skill
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Claude Code](https://img.shields.io/badge/Claude_Code-Plugin-blue)](https://claude.com/claude-code)
+
 Complete visual content system for Claude Code — 15 specialized workflows, 4 AI image models, aesthetic routing, and brand customization.
+
+![Architecture](docs/images/architecture-diagram.png)
 
 ## Installation
 
