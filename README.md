@@ -3,7 +3,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Plugin-blue)](https://claude.com/claude-code)
 
-Complete visual content system for Claude Code — 15 specialized workflows, 4 AI image models, aesthetic routing, and brand customization.
+Complete visual content system for Claude Code — 16 specialized workflows, 4 AI image models, aesthetic routing, and brand customization.
+
+The default model is **Nano Banana 2** (`gemini-3.1-flash-image-preview`), Google's latest image generation model combining Pro-level quality with Flash speed at ~50% lower cost.
 
 ![Architecture](docs/images/architecture-diagram.png)
 
@@ -27,7 +29,7 @@ bun install
 Create `~/.claude/.env` with the API keys for the models you want to use:
 
 ```
-# Required for Nano Banana Pro (default model, recommended)
+# Required for Nano Banana 2 and Nano Banana Pro (recommended)
 GOOGLE_API_KEY=your-google-api-key
 
 # Required for Flux model
@@ -40,7 +42,7 @@ OPENAI_API_KEY=your-openai-api-key
 REMOVEBG_API_KEY=your-removebg-key
 ```
 
-You only need the keys for the models you plan to use. Nano Banana Pro (`GOOGLE_API_KEY`) is the recommended default.
+You only need the keys for the models you plan to use. Nano Banana 2 (`GOOGLE_API_KEY`) is the default.
 
 ## Usage
 
@@ -50,8 +52,123 @@ Once installed, tell Claude Code to generate images:
 - "Make a technical diagram of this architecture"
 - "Generate a comparison visual: React vs Vue"
 - "Create a timeline of the project milestones"
+- "Edit this image — remove the background clutter"
 
 The skill automatically routes to the appropriate workflow based on your request.
+
+## Models
+
+| Model | Provider | Cost/Image | Best For |
+|-------|----------|-----------|----------|
+| **nano-banana-2** (default) | Google Gemini | ~$0.067 | Fast iteration, most tasks, web search grounding |
+| **nano-banana-pro** | Google Gemini | ~$0.134 | Maximum reasoning, complex multi-turn editing |
+| **gpt-image-1** | OpenAI | varies | Text rendering in images, precise literal interpretation |
+| **flux** | Replicate | varies | Maximum photorealism, complex scenes |
+
+### Nano Banana 2 Highlights
+
+Nano Banana 2 (`gemini-3.1-flash-image-preview`) launched February 2026 and is the recommended default:
+
+- **Pro-level quality at Flash speed** — roughly 50% cheaper than Nano Banana Pro
+- **Web search grounding** — real-time web + image search for accurate logos, landmarks, brand identities
+- **Precision text rendering** — accurate, legible text for mockups, cards, infographics
+- **In-image translation** — localize text across languages
+- **Subject consistency** — up to 5 characters and 14 objects with high fidelity
+- **512px to 4K resolution** — from fast cheap previews to production quality
+- **Configurable thinking** — `minimal` (default) or `high` for complex compositions
+- **Extended aspect ratios** — 1:4, 4:1, 1:8, 8:1, 2:3, 3:4, 4:5, 5:4 (in addition to standard ratios)
+
+For more details, see:
+- [Nano Banana 2 announcement](https://blog.google/innovation-and-ai/technology/ai/nano-banana-2/) — Google's official blog post
+- [Build with Nano Banana 2](https://blog.google/innovation-and-ai/technology/developers-tools/build-with-nano-banana-2/) — developer-focused overview
+- [Gemini API image generation docs](https://ai.google.dev/gemini-api/docs/image-generation) — full API reference
+
+## CLI Examples
+
+### Basic generation
+
+```bash
+bun run skills/art/tools/generate-image.ts \
+  --prompt "Hand-drawn sketch of interconnected nodes on cream background" \
+  --size 2K \
+  --aspect-ratio 16:9 \
+  --output /tmp/header.png
+```
+
+### Quick preview at 512px (fast, cheap)
+
+```bash
+bun run skills/art/tools/generate-image.ts \
+  --prompt "Isometric diorama of a home office" \
+  --size 512px \
+  --output /tmp/preview.png
+```
+
+### Using thinking for complex compositions
+
+```bash
+bun run skills/art/tools/generate-image.ts \
+  --prompt "Technical architecture diagram showing 5 microservices connected by arrows, labeled, LEFT TO RIGHT flow" \
+  --thinking high \
+  --size 2K \
+  --aspect-ratio 16:9 \
+  --output /tmp/architecture.png
+```
+
+### With a reference image for style transfer
+
+```bash
+bun run skills/art/tools/generate-image.ts \
+  --prompt "Apply this visual style to a portrait of a lighthouse at sunset" \
+  --reference-image /path/to/style-reference.png \
+  --size 2K \
+  --output /tmp/styled.png
+```
+
+### Using Nano Banana Pro for multi-turn refinement
+
+```bash
+bun run skills/art/tools/generate-image.ts \
+  --model nano-banana-pro \
+  --prompt "Product photo of a ceramic mug on marble surface, soft shadows" \
+  --size 4K \
+  --aspect-ratio 1:1 \
+  --output /tmp/product.png
+```
+
+### Creative variations (generates 4 options)
+
+```bash
+bun run skills/art/tools/generate-image.ts \
+  --prompt "Abstract representation of data flowing through a neural network" \
+  --creative-variations \
+  --output /tmp/variations.png
+```
+
+### Background removal
+
+```bash
+bun run skills/art/tools/generate-image.ts \
+  --prompt "Cartoon mascot character" \
+  --remove-bg \
+  --output /tmp/mascot-nobg.png
+```
+
+### All CLI options
+
+```
+--model          Model to use (nano-banana-2, nano-banana-pro, gpt-image-1, flux)
+--prompt         Image generation prompt (required)
+--size           Output size (512px, 1K, 2K, 4K) — 512px is NB2 only
+--aspect-ratio   Aspect ratio (1:1, 16:9, 9:16, 4:3, 3:2, 21:9, and NB2 extended)
+--output         Output file path (required)
+--reference-image  Reference image for style transfer (Gemini models only)
+--thinking       Thinking level: minimal, high (NB2 only)
+--transparent    Request transparent background (gpt-image-1 only)
+--remove-bg      Remove background after generation (requires REMOVEBG_API_KEY)
+--creative-variations  Generate 4 creative variations
+--help           Show help
+```
 
 ## Available Workflows
 
@@ -74,40 +191,23 @@ The skill automatically routes to the appropriate workflow based on your request
 | Comics | Sequential panels |
 | Image editing | Modify existing images |
 
-## Models
-
-| Model | Provider | Best For |
-|-------|----------|----------|
-| **nano-banana-pro** (default) | Google Gemini | Iterative editing, style transfer, brand consistency |
-| **flux** | Replicate | Maximum photorealism, complex scenes |
-| **gpt-image-1** | OpenAI | Text in images, precise literal interpretation |
-| **nano-banana** | Replicate | Quick generation, simple compositions |
-
 ## Adding Your Own Brand Aesthetic
 
 The skill ships with a warm hand-drawn sketch aesthetic as default. To add your own brand:
 
-1. Copy `skills/art/aesthetics/example.md` to `skills/art/aesthetics/your-brand.md`
-2. Fill in your brand colors, line style, composition rules, and mood
+1. Create a new file at `skills/art/aesthetics/your-brand.md`
+2. Define your brand colors, line style, composition rules, and mood
 3. Define a **Base Prompt Prefix** — the consistency lock that ensures all your images look cohesive
 4. When generating, tell Claude which brand to use: "Create a header using my-brand aesthetic"
 
-See `skills/art/aesthetics/example.md` for the full template.
+See existing aesthetics in `skills/art/aesthetics/` for examples.
 
-## CLI Tool
+## Further Reading
 
-The image generation CLI can also be used directly:
-
-```bash
-bun run skills/art/tools/generate-image.ts \
-  --model nano-banana-pro \
-  --prompt "Hand-drawn sketch of interconnected nodes" \
-  --size 2K \
-  --aspect-ratio 16:9 \
-  --output /tmp/header.png
-```
-
-Run `--help` for all options including `--reference-image`, `--transparent`, `--remove-bg`, and `--creative-variations`.
+- [Nano Banana 2 announcement](https://blog.google/innovation-and-ai/technology/ai/nano-banana-2/) — capabilities overview, subject consistency, web search grounding
+- [Build with Nano Banana 2](https://blog.google/innovation-and-ai/technology/developers-tools/build-with-nano-banana-2/) — developer API details, pricing, integration
+- [Gemini API image generation docs](https://ai.google.dev/gemini-api/docs/image-generation) — full API reference: parameters, thinking config, aspect ratios, reference images, multi-turn editing
+- [Nano Banana prompting guide](skills/art/nano-banana-guide.md) — detailed prompt formulas, action verbs, mood vocabulary, and brand integration templates
 
 ## License
 
