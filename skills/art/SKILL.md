@@ -171,6 +171,39 @@ bun run ~/.claude/skills/art/tools/generate-image.ts \
 - `GOOGLE_API_KEY` - Nano Banana 2 and Nano Banana Pro
 - `REMOVEBG_API_KEY` - Background removal
 
+### Quick Preview Workflow (512px)
+
+Use `--size 512px` for fast, cheap previews before committing to full resolution:
+
+```bash
+# 1. Preview at 512px (fast, low cost)
+bun run ~/.claude/skills/art/tools/generate-image.ts \
+  --prompt "[PROMPT]" --size 512px --output /tmp/preview.png
+
+# 2. Happy? Regenerate at full size
+bun run ~/.claude/skills/art/tools/generate-image.ts \
+  --prompt "[PROMPT]" --size 2K --output /path/to/final.png
+```
+
+### Thinking Flag (Nano Banana 2 only)
+
+Add `--thinking` to give the model more reasoning time for complex compositions:
+
+```bash
+bun run ~/.claude/skills/art/tools/generate-image.ts \
+  --prompt "Complex multi-element scene..." \
+  --thinking medium --output /path/to/output.png
+```
+
+| Level | Use When |
+|-------|----------|
+| `minimal` | Simple subjects, minor improvement |
+| `low` | Moderate complexity |
+| `medium` | Multi-element compositions, style matching |
+| `high` | Maximum reasoning — complex layouts, precise positioning |
+
+Only works with `nano-banana-2`. Adds latency but improves compositional accuracy.
+
 ### Common Diagram Pitfalls (Avoid These)
 
 **Learned from 2026-01-16 portfolio diagram session:**

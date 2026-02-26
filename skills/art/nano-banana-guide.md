@@ -183,6 +183,30 @@ Place [subject] in [new environment]. Maintain [consistency elements]. Adjust li
 
 ---
 
+## Thinking Levels (Nano Banana 2 only)
+
+The `--thinking` flag gives the model extra reasoning time before generating. This improves compositional accuracy for complex prompts.
+
+| Level | Latency | Best For |
+|-------|---------|----------|
+| `minimal` | Slight | Simple tweaks where default quality is almost right |
+| `low` | +~2s | Moderate scenes, better element placement |
+| `medium` | +~5s | Multi-element compositions, precise style matching |
+| `high` | +~10s | Complex layouts, exact positioning, maximum accuracy |
+
+**When to use thinking:**
+- Prompt describes 3+ distinct elements with specific spatial relationships
+- Previous generation placed elements incorrectly
+- Style transfer needs to be precise
+- Architecture/diagram-style images with labeled components
+
+**When to skip thinking:**
+- Simple single-subject images
+- Fast iteration / exploration phase
+- 512px previews (speed matters more)
+
+---
+
 ## Iterative Refinement Workflow
 
 Nano Banana Pro remembers context across turns. Use this for progressive refinement:

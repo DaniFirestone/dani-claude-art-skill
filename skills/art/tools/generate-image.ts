@@ -62,6 +62,7 @@ type ReplicateSize = "1:1" | "16:9" | "3:2" | "2:3" | "3:4" | "4:3" | "4:5" | "5
 type OpenAISize = "1024x1024" | "1536x1024" | "1024x1536";
 type GeminiSize = "512px" | "1K" | "2K" | "4K";
 type Size = ReplicateSize | OpenAISize | GeminiSize;
+type ThinkingLevel = "minimal" | "low" | "medium" | "high";
 
 interface CLIArgs {
   model: Model;
@@ -71,8 +72,9 @@ interface CLIArgs {
   creativeVariations?: number;
   aspectRatio?: ReplicateSize; // For Gemini models
   transparent?: boolean; // Enable transparent background
-  referenceImage?: string; // Reference image path (Nano Banana Pro only)
+  referenceImage?: string; // Reference image path (Gemini models)
   removeBg?: boolean; // Remove background after generation using remove.bg API
+  thinking?: ThinkingLevel; // Thinking level for Nano Banana 2
 }
 
 // ============================================================================
@@ -151,6 +153,8 @@ OPTIONS:
                              Note: Not all models support transparency natively; may require post-processing
   --remove-bg                Remove background after generation using remove.bg API
                              Creates true transparency by removing the generated background
+  --thinking <level>         Thinking level for Nano Banana 2: minimal, low, medium, high
+                             minimal = fastest, high = best quality for complex compositions
   --creative-variations <n>  Generate N variations (appends -v1, -v2, etc. to output filename)
                              CLI mode: generates N images with same prompt (tests model variability)
   --help, -h                 Show this help message
@@ -268,6 +272,13 @@ function parseArgs(argv: string[]): CLIArgs {
         parsed.referenceImage = value;
         i++; // Skip next arg (value)
         break;
+      case "thinking":
+        if (value !== "minimal" && value !== "low" && value !== "medium" && value !== "high") {
+          throw new CLIError(`Invalid thinking level: ${value}. Must be: minimal, low, medium, high`);
+        }
+        parsed.thinking = value as ThinkingLevel;
+        i++;
+        break;
       case "creative-variations":
         const variations = parseInt(value, 10);
         if (isNaN(variations) || variations < 1 || variations > 10) {
@@ -293,6 +304,11 @@ function parseArgs(argv: string[]): CLIArgs {
   // Validate reference-image is only used with Gemini models
   if (parsed.referenceImage && parsed.model !== "nano-banana-pro" && parsed.model !== "nano-banana-2") {
     throw new CLIError("--reference-image is only supported with --model nano-banana-pro or nano-banana-2");
+  }
+
+  // Validate thinking is only used with nano-banana-2
+  if (parsed.thinking && parsed.model !== "nano-banana-2") {
+    throw new CLIError("--thinking is only supported with --model nano-banana-2");
   }
 
   // Validate size based on model
@@ -549,7 +565,8 @@ async function generateWithNanoBanana2(
   size: GeminiSize,
   aspectRatio: ReplicateSize,
   output: string,
-  referenceImage?: string
+  referenceImage?: string,
+  thinking?: ThinkingLevel
 ): Promise<void> {
   const apiKey = process.env.GOOGLE_API_KEY;
   if (!apiKey) {
@@ -558,10 +575,11 @@ async function generateWithNanoBanana2(
 
   const ai = new GoogleGenAI({ apiKey });
 
+  const thinkingLabel = thinking ? `, thinking=${thinking}` : "";
   if (referenceImage) {
-    console.log(`Generating with Nano Banana 2 (Gemini 3.1 Flash Image) at ${size} ${aspectRatio} with reference image...`);
+    console.log(`Generating with Nano Banana 2 (Gemini 3.1 Flash Image) at ${size} ${aspectRatio}${thinkingLabel} with reference image...`);
   } else {
-    console.log(`Generating with Nano Banana 2 (Gemini 3.1 Flash Image) at ${size} ${aspectRatio}...`);
+    console.log(`Generating with Nano Banana 2 (Gemini 3.1 Flash Image) at ${size} ${aspectRatio}${thinkingLabel}...`);
   }
 
   // Prepare content parts
@@ -600,16 +618,25 @@ async function generateWithNanoBanana2(
   // Add text prompt
   parts.push({ text: prompt });
 
+  // Build config
+  const config: Record<string, any> = {
+    responseModalities: ["TEXT", "IMAGE"],
+    imageConfig: {
+      aspectRatio: aspectRatio,
+      imageSize: size,
+    },
+  };
+
+  if (thinking) {
+    config.thinkingConfig = {
+      thinkingLevel: thinking,
+    };
+  }
+
   const response = await ai.models.generateContent({
     model: "gemini-3.1-flash-image-preview",
     contents: [{ parts }],
-    config: {
-      responseModalities: ["TEXT", "IMAGE"],
-      imageConfig: {
-        aspectRatio: aspectRatio,
-        imageSize: size,
-      },
-    },
+    config,
   });
 
   // Extract image data from response
@@ -697,7 +724,8 @@ async function main(): Promise<void> {
               args.size as GeminiSize,
               args.aspectRatio!,
               varOutput,
-              args.referenceImage
+              args.referenceImage,
+              args.thinking
             )
           );
         } else if (args.model === "gpt-image-1") {
@@ -729,7 +757,8 @@ async function main(): Promise<void> {
         args.size as GeminiSize,
         args.aspectRatio!,
         args.output,
-        args.referenceImage
+        args.referenceImage,
+        args.thinking
       );
     } else if (args.model === "gpt-image-1") {
       await generateWithGPTImage(finalPrompt, args.size as OpenAISize, args.output);
