@@ -1,18 +1,28 @@
-# Nano Banana Pro Prompting Guide
+# Nano Banana Prompting Guide
 
 **Extracted from:** The Complete Nano Banana AI Image Editing with Google Gemini (Mammoth Club)
+**For:** Cerebro Art Skill image generation and editing
+**Applies to:** Nano Banana 2 (`gemini-3.1-flash-image-preview`) and Nano Banana Pro (`gemini-3-pro-image-preview`)
 
 ---
 
-## Understanding Nano Banana Pro
+## Model Overview
 
-Nano Banana Pro (Gemini 3 Pro Image) is Google's advanced image generation and editing model with several key advantages:
+| Model | API ID | Best For |
+|-------|--------|----------|
+| **Nano Banana 2** (default) | `gemini-3.1-flash-image-preview` | Fast iteration, most tasks, web search grounding |
+| **Nano Banana Pro** | `gemini-3-pro-image-preview` | Professional assets, advanced reasoning, complex compositions |
+
+Both models share the same API surface, prompt patterns, and capabilities below. Nano Banana 2 is faster and cheaper with Pro-level quality. Use Pro when maximum reasoning or complex multi-turn editing is needed.
+
+### Key capabilities shared by both models:
 
 - **Multi-turn editing** — Remembers previous commands for iterative refinement
 - **Image blending** — Combine multiple photos into single compositions
 - **World knowledge** — Uses Gemini's context for complex semantic edits
 - **Style transfer** — Extract visual characteristics from one image, apply to another
 - **Consistency** — Maintains subject likeness across different edits and scenes
+- **Web search grounding** (Nano Banana 2) — Powered by real-time web and image search
 
 ---
 
@@ -202,26 +212,26 @@ Turn 5: "Remove the bottom-left node, it's too cluttered"
 
 ---
 
-## Brand Aesthetic Integration
+## Integration with Signal Over Noise Aesthetic
 
-When generating images for branded content, combine these prompt patterns with your aesthetic file:
+When generating images for SoN content, combine these prompt patterns with the brand aesthetic:
 
-### Standard Image Prompt Template
+### Standard SoN Image Prompt Template
 
 ```
-[Action] to create a [content type] in [your art style] on [your background color].
+[Action] to create a [content type] in hand-drawn Excalidraw sketch style on warm cream background (#F7F4EA).
 
 SUBJECT: [describe 2-4 key elements]
 
-STYLE: [your line/element style from aesthetic file]
+STYLE: Rough, wobbly charcoal sketch lines (#2D2D2D). Imperfect hand-drawn strokes. Multiple overlapping strokes like whiteboard markers.
 
 ACCENTS:
-- Primary: [your primary accent] highlights on [focal element]
-- Secondary: [your secondary accent] highlights on [action element]
+- Primary: Deep teal (#1A6B6B) highlights on [focal element]
+- Secondary: Burnt orange (#C85A2A) highlights on [action element]
 
 MOOD: [Select from vocabulary above]
 
-COMPOSITION: [your composition rules from aesthetic file]
+COMPOSITION: 40-50% negative space, minimal elements, generous breathing room.
 ```
 
 ---
@@ -286,10 +296,10 @@ The model understands time-related contexts:
 
 ## Reference Image Usage
 
-When using `--reference-image` with Nano Banana Pro:
+When using `--reference-image` with Nano Banana 2 or Nano Banana Pro:
 
 ```bash
-bun run skills/art/tools/generate-image.ts \
+bun run ~/.claude/skills/art/tools/generate-image.ts \
   --model nano-banana-pro \
   --prompt "[Your prompt including style transfer instructions]" \
   --reference-image /path/to/reference.png \
@@ -307,4 +317,4 @@ bun run skills/art/tools/generate-image.ts \
 
 ## Credits
 
-Content synthesized from *The Complete Nano Banana AI Image Editing with Google Gemini* by Mammoth Club, adapted for the art skill image generation workflows.
+Content synthesized from *The Complete Nano Banana AI Image Editing with Google Gemini* by Mammoth Club, adapted for Cerebro Art Skill with Signal Over Noise brand integration.

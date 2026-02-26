@@ -60,7 +60,7 @@ The goal is [desired outcome].
 ### Step 3: Execute Edit
 
 ```bash
-bun run skills/art/tools/generate-image.ts \
+bun run ~/.claude/skills/art/tools/generate-image.ts \
   --model nano-banana-pro \
   --prompt "[Your edit prompt]" \
   --reference-image /path/to/source-image.png \
@@ -207,21 +207,21 @@ IMPROVEMENTS:
 
 ---
 
-## Brand Style Edit Integration
+## Signal Over Noise Edit Integration
 
-When editing images for your brand, apply your aesthetic file settings:
+When editing images for SoN content, apply brand aesthetic:
 
-### Convert to Your Brand Style
+### Convert to SoN Style
 
 ```
-Transform this [image type] into [your brand] aesthetic.
+Transform this [image type] into Signal Over Noise brand aesthetic.
 
 STYLE:
-- Apply [your line style] to lines and edges
-- Shift background to [your background color]
-- Add [your primary accent] accents to focal elements
-- Add [your secondary accent] highlights to action elements
-- [Your mood/feel description]
+- Apply hand-drawn Excalidraw sketch quality to lines and edges
+- Shift background to warm cream (#F7F4EA)
+- Add deep teal (#1A6B6B) accents to focal elements
+- Add burnt orange (#C85A2A) highlights to action elements
+- Soften to casual, approachable warmth
 
 PRESERVE:
 - Core concept and composition
@@ -269,5 +269,5 @@ Each turn builds on the previous result. The model maintains context.
 ## See Also
 
 - `nano-banana-guide.md` — Full prompt vocabulary and templates
-- `aesthetic.md` — Default brand styling
+- `aesthetic.md` — Signal Over Noise brand styling
 - `generate-image.ts --help` — CLI options and parameters

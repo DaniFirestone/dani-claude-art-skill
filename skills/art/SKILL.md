@@ -1,6 +1,6 @@
 ---
 name: art
-description: Complete visual content system with aesthetic routing, multiple AI models, and 15 specialized workflows.
+description: Complete visual content system for Cerebro. Signal Over Noise aesthetic - light backgrounds, teal/burnt orange accents, hand-drawn sketch style.
 user-invocable: true
 triggers:
   - USE WHEN user wants to create visual content, illustrations, or diagrams
@@ -39,9 +39,27 @@ The art skill supports multiple visual identities. **Before generating any visua
 
 ### How to Select an Aesthetic
 
-1. **Check if the user specifies a brand/project** (e.g., "use my brand style", "corporate newsletter header")
-2. **Check if the target output has a project-specific style guide** (e.g., `HERO-IMAGE-TEMPLATE.md` in the project root)
-3. **If no brand specified, use the default aesthetic** (`aesthetic.md`)
+1. **Check if the user specifies a brand/project** (e.g., "HotSquatch icon", "SoN newsletter header")
+2. **Check for content-type exceptions** (see Content-Type Override Rules below)
+3. **Check if the target output has a site-specific style guide** (e.g., `HERO-IMAGE-TEMPLATE.md`)
+4. **If no brand specified, use Signal Over Noise as the default**
+
+### Content-Type Override Rules
+
+**CRITICAL:** Some content types intentionally use different aesthetics than their host site.
+
+| Content Type | Detection Pattern | Aesthetic to Use | DO NOT Use |
+|--------------|------------------|------------------|------------|
+| **DeRP Corporate** (the company itself) | Path in `~/Dev/derp-site/`, corporate pages (about, history, leadership, careers, investors, press, contact), OG images, company branding | SCUMM-era LucasArts pixel art — use `hotsquatch.md` aesthetic | jimchristian.net claymorphic, SoN hand-drawn sketch |
+| **DeRP Product Pages** (individual products) | Product page files, product hero images, product-specific content | Match satire target aesthetic (infomercial, tech product, vintage, etc.) — see DeRP Product Standard | The corporate pixel art style — products inherit the genre they're spoofing |
+| **Satirical/Parody Content** | User explicitly says "satire", "parody", "joke product" | Match the satire target's aesthetic (e.g., corporate B2B for business parody) | Host site's aesthetic |
+| **Easter Eggs** | Path contains `easter-eggs/`, explicitly marked as easter egg | Depends on easter egg theme, ask user if unclear | Host site's default |
+
+**Key distinction:** DeRP has a two-tier visual identity. The *company brand* (corporate pages, OG images, team portraits) uses SCUMM-era pixel art. Individual *product pages* each inherit the aesthetic of whatever era/genre they're spoofing (1950s infomercials, sci-fi tech, vintage photography, etc.). This contrast is intentional.
+
+**Rule:** When content-type override detected, DO NOT check host site style guides. The content is intentionally divergent.
+
+**DeRP Products:** For comprehensive guidelines, see `~/Dev/jimchristian-net/DERP-PRODUCT-STANDARD.md` — includes aesthetic reference, workflow selection, layout requirements, and page structure template.
 
 ### Base Prompt Prefix Standard (MANDATORY)
 
@@ -58,16 +76,20 @@ The art skill supports multiple visual identities. **Before generating any visua
 
 **Where to find each prefix:**
 - Each aesthetic file (`.md`) contains a "Base Prompt Prefix" section with the locked values
-- Project-specific aesthetics inherit from their parent brand and override only what changes
+- Project-specific aesthetics (e.g., lead magnet `AESTHETIC.md`) inherit from their parent brand and override only what changes
 - **Always read the aesthetic file and use its prefix before generating** — never freestyle prompt parameters that have been locked
+
+**When creating new aesthetics via `aesthetic-definer`:** The agent MUST produce a base prompt prefix as part of the output. An aesthetic without a consistency lock is incomplete.
 
 ### Available Aesthetics
 
-| Name | Aesthetic File | Style |
-|------|---------------|-------|
-| **Default** | `aesthetic.md` | Hand-drawn sketch, cream backgrounds, teal/orange accents |
+| Brand | Aesthetic File | Style |
+|-------|---------------|-------|
+| **Signal Over Noise** (default) | `~/.claude/skills/art/aesthetic.md` | Hand-drawn sketch, cream backgrounds, teal/orange accents |
+| **Second Brain Chronicles** | `~/.claude/skills/art/aesthetics/sbc.md` | Claymorphic DARK, charcoal backgrounds, teal/green accents, isometric dioramas |
+| **HotSquatch! Apps** | `~/.claude/skills/art/aesthetics/hotsquatch.md` | Pixel art, SCUMM-era LucasArts, dark backgrounds, retro palette |
 
-**To add your own aesthetic:** Create a new `.md` file in `aesthetics/` — see `aesthetics/example.md` for the template.
+**To add a new aesthetic:** Use the `aesthetic-definer` agent. It outputs to `~/.claude/skills/art/aesthetics/[name].md`.
 
 ### Aesthetic Loading Rule
 
@@ -100,11 +122,11 @@ The art skill supports multiple visual identities. **Before generating any visua
 
 ## Image Generation
 
-**Default model:** nano-banana-pro (Gemini 3 Pro)
+**Default model:** nano-banana-2 (Gemini 3.1 Flash Image)
 
 ```bash
-bun run skills/art/tools/generate-image.ts \
-  --model nano-banana-pro \
+bun run ~/.claude/skills/art/tools/generate-image.ts \
+  --model nano-banana-2 \
   --prompt "[PROMPT]" \
   --size 2K \
   --aspect-ratio 1:1 \
@@ -115,15 +137,23 @@ bun run skills/art/tools/generate-image.ts \
 
 | Model | When to Use |
 |-------|-------------|
-| **flux** | Maximum quality, photorealistic |
+| **nano-banana-pro** | Maximum quality, professional asset production |
+| **flux** | Maximum photorealism, complex scenes |
 | **gpt-image-1** | When Nano Banana struggles with specific concepts |
 
 ### Model Selection Guide
 
-**Nano Banana Pro (default):**
-- Best for: Iterative editing, style transfer, brand aesthetic consistency
-- Strengths: Multi-turn refinement, reference images, world knowledge
-- Use when: Most image generation tasks
+**Nano Banana 2 (default):**
+- Best for: Most image generation tasks, fast iteration
+- Strengths: Pro-level quality at Flash speed, reference images, web search grounding, 512px-4K range
+- Use when: Default choice for all standard image generation
+- API model: `gemini-3.1-flash-image-preview`
+
+**Nano Banana Pro:**
+- Best for: Professional asset production, maximum reasoning
+- Strengths: Advanced reasoning, multi-turn refinement, style transfer
+- Use when: Quality matters more than speed, complex compositional tasks
+- API model: `gemini-3-pro-image-preview`
 
 **gpt-image-1:**
 - Best for: Text rendering in images, precise literal interpretation
@@ -133,15 +163,17 @@ bun run skills/art/tools/generate-image.ts \
 **Flux:**
 - Best for: Maximum photorealism, complex scenes
 - Strengths: Highest detail, natural lighting
-- Use when: Quality matters more than iteration speed
+- Use when: Photorealism matters more than iteration speed
 
 **API keys in:** `~/.claude/.env`
-- `REPLICATE_API_TOKEN` - Flux and Nano Banana
+- `REPLICATE_API_TOKEN` - Flux and Nano Banana (original)
 - `OPENAI_API_KEY` - GPT-image-1
-- `GOOGLE_API_KEY` - Nano Banana Pro
+- `GOOGLE_API_KEY` - Nano Banana 2 and Nano Banana Pro
 - `REMOVEBG_API_KEY` - Background removal
 
 ### Common Diagram Pitfalls (Avoid These)
+
+**Learned from 2026-01-16 portfolio diagram session:**
 
 | Pitfall | Problem | Fix |
 |---------|---------|-----|
@@ -158,7 +190,7 @@ bun run skills/art/tools/generate-image.ts \
 - [ ] Layout explicitly stated (horizontal/vertical)
 - [ ] Key element highlighting specified
 
-### Site-Specific Style Override
+### Site-Specific Style Override (CRITICAL)
 
 **Before generating images for a specific website, CHECK for style guides:**
 
@@ -168,9 +200,14 @@ ls HERO-IMAGE-TEMPLATE.md    # Site-specific image style
 ls STYLE-GUIDE.md            # Design system
 ```
 
-**If found, the site's style guide OVERRIDES the default aesthetic.**
+**If found, the site's style guide OVERRIDES the default Signal Over Noise aesthetic.**
 
-**Default `aesthetic.md` applies when:** No site-specific style guide exists.
+**Example: jimchristian.net**
+- Has `HERO-IMAGE-TEMPLATE.md` defining **claymorphic** style
+- Use isometric 3D clay/polymer aesthetic, NOT flat sketches
+- Warm peach backgrounds, pillow-like edges, Blender render look
+
+**Default aesthetic.md applies when:** No site-specific style guide exists.
 
 ### Consistent Dimensions for Related Images
 
@@ -181,9 +218,10 @@ When generating multiple images for the same page/section:
 
 ---
 
-### Nano Banana Pro Prompting Guide
+### Nano Banana Prompting Guide
 
-**For detailed prompting techniques:** `nano-banana-guide.md`
+**For detailed prompting techniques:** `~/.claude/skills/art/nano-banana-guide.md`
+**Applies to both Nano Banana 2 and Nano Banana Pro** — same prompt patterns, same API structure.
 
 Includes:
 - Core prompt formula: `[Action] the [Subject] by [Specific Change]. The goal is [Desired Outcome].`
@@ -192,17 +230,7 @@ Includes:
 - Color palette phrases
 - Aspect ratio selection guide
 - Iterative refinement workflow
-
----
-
-## Adding Your Own Aesthetic
-
-1. Copy `aesthetics/example.md` to `aesthetics/your-brand.md`
-2. Fill in your brand colors, line style, and mood
-3. Define your **Base Prompt Prefix** (consistency lock)
-4. Reference it when generating images for that brand
-
-The skill will use `aesthetic.md` as the default. Specify your brand name to route to a custom aesthetic.
+- Signal Over Noise integration template
 
 ---
 
@@ -249,3 +277,13 @@ pngquant --quality=65-80 --force --output compressed.png original.png
 # Or convert to optimized JPEG
 convert original.png -quality 85 compressed.jpg
 ```
+
+---
+
+## Assimilation Note
+
+**Source:** Personal_AI_Infrastructure Art Skill
+**Assimilated:** 2026-01-04
+**Adapted:** PAI's dark/neon aesthetic → Cerebro's warm/cream aesthetic
+
+**For complete visual styling rules, ALWAYS read:** `~/.claude/skills/art/aesthetic.md`

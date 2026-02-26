@@ -1,8 +1,6 @@
-# Visual Aesthetic System
+# Cerebro Visual Aesthetic System
 
-**A warm, approachable aesthetic combining Excalidraw's hand-drawn charm with a cream/teal brand palette.**
-
-This is the **default aesthetic** included with the art skill. Customize it or create your own in `aesthetics/`.
+**A warm, approachable aesthetic combining Excalidraw's hand-drawn charm with Signal Over Noise's cream/teal brand palette.**
 
 ---
 
@@ -18,7 +16,7 @@ Every visualization balances **professional clarity** with **human warmth** — 
 
 ---
 
-## The Look
+## The Signal Over Noise Look
 
 ### What We Want
 - **Excalidraw-style hand-drawn lines** — Sketchy, rough, whiteboard aesthetic
@@ -50,7 +48,7 @@ Every visualization balances **professional clarity** with **human warmth** — 
 
 ### Backgrounds
 ```
-Warm Cream      #F7F4EA   (primary)
+Warm Cream      #F7F4EA   (primary - SoN brand warm)
 Pure White      #FFFFFF   (alternative - maximum clarity)
 Light Gray      #F5F5F5   (subtle variation)
 ```
@@ -62,7 +60,7 @@ Dark Gray       #4A4A4A   (secondary sketch lines)
 Medium Gray     #6B6B6B   (tertiary/subtle lines)
 ```
 
-### Accent Colors
+### Accent Colors (Signal Over Noise Brand)
 ```
 Deep Teal       #1A6B6B   (expertise - primary accent)
 Bright Teal     #2B9B9B   (lighter variant)
@@ -79,7 +77,7 @@ Coral Orange    #E07B4F   (softer warmth variant)
 
 ### Color Hierarchy
 1. **CHARCOAL SKETCH LINES are PRIMARY** — hand-drawn, rough, confident
-2. **Deep Teal as MAIN ACCENT** — expertise, trust, identity
+2. **Deep Teal as MAIN ACCENT** — expertise, trust, Signal Over Noise identity
 3. **Burnt Orange as WARMTH ACCENT** — energy, approachability, action
 4. **Cream backgrounds** — provide warmth and readability
 5. **Highlights** — subtle, soft shadows only
@@ -125,11 +123,11 @@ The sketchy hand-drawn quality is critical:
 
 ## Visual Metaphors
 
-**How to translate concepts into this aesthetic:**
+**How to translate concepts into Signal Over Noise aesthetic:**
 
 | Concept Type | Visual Strategy | Style Notes |
 |--------------|-----------------|-------------|
-| System Architecture | Connected boxes with teal pathways | Sketch + teal connections |
+| System Architecture | Connected boxes with teal pathways | Excalidraw sketch + teal connections |
 | Data Flow | Hand-drawn arrows with orange highlights | Orange flow direction, charcoal sketch |
 | Process Steps | Numbered circles with connecting lines | Sketchy circles, teal highlights |
 | Hierarchies | Tree diagrams with warm accents | Charcoal branches, teal/orange highlights |
@@ -198,7 +196,7 @@ The sketchy hand-drawn quality is critical:
 ## Background Variations
 
 ### Warm Cream (Default)
-- Cream (#F7F4EA)
+- Signal Over Noise cream (#F7F4EA)
 - Warm, inviting, excellent readability
 - Professional and approachable
 
@@ -219,7 +217,7 @@ The sketchy hand-drawn quality is critical:
 1. **HAND-DRAWN SKETCH STYLE** — Rough, imperfect, Excalidraw aesthetic
 2. **WARM CREAM BACKGROUNDS** — Or white for clarity
 3. **CHARCOAL PRIMARY LINES** — Dominant sketch linework
-4. **TEAL MAIN ACCENT** — Expertise, trust, identity
+4. **TEAL MAIN ACCENT** — Expertise, trust, SoN identity
 5. **ORANGE SECONDARY ACCENT** — Warmth, action, approachability
 6. **SUBTLE SHADOWS** — Soft depth, not harsh glows
 7. **MINIMAL ELEMENTS** — 2-4 components maximum
@@ -266,7 +264,7 @@ The sketchy hand-drawn quality is critical:
 
 ## Base Prompt Prefix (Consistency Lock)
 
-**Every image generation for this aesthetic must be prepended with this base prefix.** This ensures visual consistency across all illustrations in a set. The prefix locks down the parameters that, if varied, break cohesion.
+**Every image generation for SoN must be prepended with this base prefix.** This ensures visual consistency across all illustrations in a set. The prefix locks down the parameters that, if varied, break cohesion.
 
 ```
 Hand-drawn editorial illustration in rough sketch style on warm cream paper background. Medium-weight charcoal ink pen lines with wobbly hand-drawn quality, multiple overlapping strokes like whiteboard markers. Variable line weight — thicker at connections, thinner at ends. Soft warm shadows, not harsh. Illustration fills 60 percent of frame with 40 percent cream background breathing room. Muted color palette: charcoal sketch lines dominate at 70 percent, deep teal accent at 10-15 percent for expertise elements, burnt orange accent at 5-10 percent for warmth and action elements.
@@ -283,7 +281,7 @@ Hand-drawn editorial illustration in rough sketch style on warm cream paper back
 | Shadow intensity | Soft, warm, subtle | Not dramatic, not absent |
 | Composition | 2-4 elements maximum | Minimal and clear |
 
-**When creating project-specific aesthetics**, derive a project-specific prefix from this base. Override only what needs to change (camera angle, background color, text treatment) and lock the overrides in the project's aesthetic file.
+**When creating project-specific aesthetics** (e.g., lead magnets, product pages), derive a project-specific prefix from this base. Override only what needs to change (camera angle, wood tones, text treatment) and lock the overrides in the project's AESTHETIC.md.
 
 ---
 
@@ -296,8 +294,8 @@ COMPOSITION:
 [Describe 2-4 key elements with rough sketchy boxes/circles/arrows]
 
 ACCENTS:
-- Primary: Deep teal highlights on [focal element]
-- Secondary: Burnt orange highlights on [action element]
+- Primary: Deep teal (#1A6B6B) highlights on [focal element]
+- Secondary: Burnt orange (#C85A2A) highlights on [action element]
 
 LAYOUT:
 - Balanced composition
@@ -308,3 +306,19 @@ CRITICAL:
 - Minimal elements (2-4 max)
 - Generous breathing room
 ```
+
+---
+
+## Adaptation Note
+
+**Original Source:** Personal_AI_Infrastructure CORE/aesthetic.md
+**Adapted for:** Signal Over Noise brand palette
+**Key Changes:**
+- Dark backgrounds → Warm cream backgrounds
+- Neon orange/cyan → Deep teal/burnt orange
+- Tron-style glows → Soft warm shadows
+- Digital energy → Approachable expertise
+
+---
+
+**This is the Cerebro aesthetic: Where Excalidraw meets Signal Over Noise, warm expertise you can trust.**
