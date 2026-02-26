@@ -220,14 +220,13 @@ CRITICAL REQUIREMENTS:
 
 ```bash
 bun run ~/.claude/skills/art/tools/generate-image.ts \
-  --model nano-banana-pro \
   --prompt "[YOUR PROMPT]" \
   --size 2K \
   --aspect-ratio 16:9 \
   --output /path/to/taxonomy.png
 ```
 
-**Model Recommendation:** nano-banana-pro (best for text-heavy grids)
+**Model:** Nano Banana 2 (default). Add `--thinking high` for grids with 4+ categories.
 
 ---
 
@@ -285,7 +284,7 @@ bun run ~/.claude/skills/art/tools/generate-image.ts \
 2. Design grid layout (structure type, arrangement)
 3. Construct prompt with color-coded categories
 4. Choose aspect ratio for layout
-5. Generate with nano-banana-pro
+5. Generate image (add --thinking high for complex layouts)
 6. Validate category clarity and readability
 ```
 

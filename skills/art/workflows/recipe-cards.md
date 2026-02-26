@@ -233,14 +233,13 @@ CRITICAL REQUIREMENTS:
 
 ```bash
 bun run ~/.claude/skills/art/tools/generate-image.ts \
-  --model nano-banana-pro \
   --prompt "[YOUR PROMPT]" \
   --size 2K \
   --aspect-ratio 4:5 \
   --output /path/to/recipe-card.png
 ```
 
-**Model Recommendation:** nano-banana-pro (best for numbered text + illustrations)
+**Model:** Nano Banana 2 (default) (best for numbered text + illustrations)
 
 ---
 
@@ -305,7 +304,7 @@ bun run ~/.claude/skills/art/tools/generate-image.ts \
 2. Design card layout (orientation, step format)
 3. Construct prompt with numbered sequence
 4. Choose aspect ratio (usually 4:5)
-5. Generate with nano-banana-pro
+5. Generate image
 6. Validate sequence clarity and warmth
 ```
 

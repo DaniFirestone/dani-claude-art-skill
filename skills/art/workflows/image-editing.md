@@ -1,6 +1,6 @@
 # Image Editing Workflow
 
-**For:** Modifying, enhancing, or transforming existing images using Nano Banana Pro
+**For:** Modifying, enhancing, or transforming existing images
 
 ---
 
@@ -19,7 +19,7 @@
 
 - Source image file (PNG, JPEG, WebP)
 - Clear description of desired changes
-- Nano Banana Pro configured (`GOOGLE_API_KEY` in `~/.claude/.env`)
+- Nano Banana 2 configured (`GOOGLE_API_KEY` in `~/.claude/.env`)
 
 ---
 
@@ -61,7 +61,6 @@ The goal is [desired outcome].
 
 ```bash
 bun run ~/.claude/skills/art/tools/generate-image.ts \
-  --model nano-banana-pro \
   --prompt "[Your edit prompt]" \
   --reference-image /path/to/source-image.png \
   --size 2K \
@@ -70,7 +69,7 @@ bun run ~/.claude/skills/art/tools/generate-image.ts \
 
 ### Step 4: Iterate if Needed
 
-Nano Banana Pro supports multi-turn refinement. Chain edits:
+Nano Banana supports multi-turn refinement. Chain edits:
 
 1. First edit: Major change
 2. Second edit: Refinement

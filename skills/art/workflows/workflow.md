@@ -167,14 +167,13 @@ CRITICAL REQUIREMENTS:
 
 ```bash
 bun run ~/.claude/skills/art/tools/generate-image.ts \
-  --model nano-banana-pro \
   --prompt "[YOUR PROMPT]" \
   --size 2K \
   --aspect-ratio 16:9 \
   --output /path/to/output.png
 ```
 
-**Model Recommendation:** nano-banana-pro for editorial illustrations
+**Model:** Nano Banana 2 (default) for editorial illustrations
 
 **Immediately Open:**
 ```bash
@@ -239,7 +238,7 @@ open /path/to/output.png
 2. Design composition (2-4 elements, 40-50% space)
 3. Construct prompt with Cerebro aesthetic
 4. Choose aspect ratio for use case
-5. Generate with nano-banana-pro
+5. Generate image
 6. Validate hand-drawn quality and conceptual clarity
 ```
 

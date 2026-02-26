@@ -202,7 +202,6 @@ CRITICAL REQUIREMENTS:
 
 ```bash
 bun run ~/.claude/skills/art/tools/generate-image.ts \
-  --model nano-banana-pro \
   --prompt "[YOUR PROMPT]" \
   --size 2K \
   --aspect-ratio [selected ratio] \
@@ -210,9 +209,9 @@ bun run ~/.claude/skills/art/tools/generate-image.ts \
 ```
 
 **Model Selection:**
-- **nano-banana-pro** — Best for text-heavy, infographic, hybrid compositions
-- **flux** — Best for artistic, abstract, editorial illustrations
-- **gpt-image-1** — Alternative interpretation, good for conceptual work
+- **nano-banana-2** (default) — Best for most tasks, fast iteration, web search grounding
+- **nano-banana-pro** — Maximum reasoning for complex multi-turn compositions
+- **flux** — Maximum photorealism, complex scenes
 
 ---
 

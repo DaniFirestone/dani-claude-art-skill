@@ -283,14 +283,13 @@ OVERLAP REGIONS:
 
 ```bash
 bun run ~/.claude/skills/art/tools/generate-image.ts \
-  --model nano-banana-pro \
   --prompt "[YOUR PROMPT]" \
   --size 2K \
   --aspect-ratio 1:1 \
   --output /path/to/framework.png
 ```
 
-**Model Recommendation:** nano-banana-pro (text-heavy frameworks need good rendering)
+**Model:** Nano Banana 2 (default). Add `--thinking high` for precise quadrant positioning.
 
 ---
 
@@ -348,7 +347,7 @@ bun run ~/.claude/skills/art/tools/generate-image.ts \
 2. Design layout (positions, labels, emphasis)
 3. Construct prompt with strategic coloring
 4. Choose aspect ratio (usually 1:1)
-5. Generate with nano-banana-pro
+5. Generate image (add --thinking high for complex layouts)
 6. Validate structure clarity and emphasis
 ```
 

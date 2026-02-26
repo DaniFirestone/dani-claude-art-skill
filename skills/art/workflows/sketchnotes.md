@@ -296,14 +296,13 @@ CRITICAL: NOT ruler-straight lines. NOT perfect symmetry. NOT drop shadows or gr
 
 ```bash
 bun run ~/.claude/skills/art/tools/generate-image.ts \
-  --model nano-banana-pro \
   --prompt "[YOUR PROMPT]" \
   --size 2K \
   --aspect-ratio 3:4 \
   --output /path/to/sketchnote.png
 ```
 
-**Model Recommendation:** nano-banana-pro (best hand-drawn aesthetic and text rendering for sketchnotes)
+**Model:** Nano Banana 2 (default) (best hand-drawn aesthetic and text rendering for sketchnotes)
 
 ---
 
@@ -401,7 +400,7 @@ bun run ~/.claude/skills/art/tools/generate-image.ts \
 3. Plan visual hierarchy (title > primary > secondary > details)
 4. Construct prompt with visual vocabulary
 5. Choose aspect ratio (usually 3:4)
-6. Generate with nano-banana-pro
+6. Generate image
 7. Validate authenticity and readability
 ```
 

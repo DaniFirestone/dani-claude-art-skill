@@ -237,14 +237,13 @@ CRITICAL REQUIREMENTS:
 
 ```bash
 bun run ~/.claude/skills/art/tools/generate-image.ts \
-  --model nano-banana-pro \
   --prompt "[YOUR PROMPT]" \
   --size 2K \
   --aspect-ratio 16:9 \
   --output /path/to/diagram.png
 ```
 
-**Model Recommendation:** nano-banana-pro (best for text rendering on diagrams)
+**Model:** Nano Banana 2 (default) (best for text rendering on diagrams)
 
 **Immediately Open:**
 ```bash

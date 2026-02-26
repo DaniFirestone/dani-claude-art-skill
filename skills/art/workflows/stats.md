@@ -246,14 +246,13 @@ CRITICAL REQUIREMENTS:
 
 ```bash
 bun run ~/.claude/skills/art/tools/generate-image.ts \
-  --model nano-banana-pro \
   --prompt "[YOUR PROMPT]" \
   --size 2K \
   --aspect-ratio 1:1 \
   --output /path/to/stat.png
 ```
 
-**Model Recommendation:** nano-banana-pro (best for number rendering)
+**Model:** Nano Banana 2 (default) (best for number rendering)
 
 ---
 
@@ -318,7 +317,7 @@ bun run ~/.claude/skills/art/tools/generate-image.ts \
 2. Design layout (hierarchy, placement, illustration)
 3. Construct prompt with dominant number
 4. Choose aspect ratio (usually 1:1)
-5. Generate with nano-banana-pro
+5. Generate image
 6. Validate number dominance and clarity
 ```
 

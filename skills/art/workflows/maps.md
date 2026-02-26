@@ -274,14 +274,13 @@ CRITICAL REQUIREMENTS:
 
 ```bash
 bun run ~/.claude/skills/art/tools/generate-image.ts \
-  --model nano-banana-pro \
   --prompt "[YOUR PROMPT]" \
   --size 2K \
   --aspect-ratio 1:1 \
   --output /path/to/map.png
 ```
 
-**Model Recommendation:** nano-banana-pro (best for text labels on maps)
+**Model:** Nano Banana 2 (default). Add `--thinking high` for maps with 4+ regions.
 
 ---
 
@@ -340,7 +339,7 @@ bun run ~/.claude/skills/art/tools/generate-image.ts \
 2. Design map layout (shape, arrangement, hierarchy)
 3. Construct prompt with cartographic elements
 4. Choose aspect ratio (usually 1:1)
-5. Generate with nano-banana-pro
+5. Generate image (add --thinking high for complex layouts)
 6. Validate geographic metaphor and readability
 ```
 

@@ -192,7 +192,6 @@ If you need to generate an annotated screenshot from scratch:
 
 ```bash
 bun run ~/.claude/skills/art/tools/generate-image.ts \
-  --model nano-banana-pro \
   --prompt "[PROMPT describing screenshot with annotations]" \
   --size 2K \
   --aspect-ratio 16:9 \

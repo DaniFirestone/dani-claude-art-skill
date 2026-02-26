@@ -274,14 +274,13 @@ CRITICAL REQUIREMENTS:
 
 ```bash
 bun run ~/.claude/skills/art/tools/generate-image.ts \
-  --model nano-banana-pro \
   --prompt "[YOUR PROMPT]" \
   --size 2K \
   --aspect-ratio 21:9 \
   --output /path/to/comic.png
 ```
 
-**Model Recommendation:** nano-banana-pro (best for text in speech bubbles)
+**Model:** Nano Banana 2 (default). Add `--thinking high` for 4-panel layouts.
 
 ---
 
@@ -344,7 +343,7 @@ bun run ~/.claude/skills/art/tools/generate-image.ts \
 2. Design panel layout (arrangement, sizing, character style)
 3. Construct prompt with panel-by-panel detail
 4. Choose aspect ratio (usually 21:9 for strips)
-5. Generate with nano-banana-pro
+5. Generate image (add --thinking high for complex layouts)
 6. Validate sequence clarity and story landing
 ```
 

@@ -246,14 +246,13 @@ CRITICAL REQUIREMENTS:
 
 ```bash
 bun run ~/.claude/skills/art/tools/generate-image.ts \
-  --model nano-banana-pro \
   --prompt "[YOUR PROMPT]" \
   --size 2K \
   --aspect-ratio 16:9 \
   --output /path/to/diagram.png
 ```
 
-**Model Recommendation:** nano-banana-pro (exceptional text rendering for labels)
+**Model:** Nano Banana 2 (default). Add `--thinking high` for complex multi-component diagrams.
 
 **Immediately Open:**
 ```bash
@@ -321,7 +320,7 @@ open /path/to/diagram.png
 2. Design layout (pattern, grouping, annotations)
 3. Construct prompt with 3-tier typography
 4. Choose aspect ratio for layout
-5. Generate with nano-banana-pro
+5. Generate image (add --thinking high for complex layouts)
 6. Validate readability and technical accuracy
 ```
 

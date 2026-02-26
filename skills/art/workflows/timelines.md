@@ -253,14 +253,13 @@ CRITICAL REQUIREMENTS:
 
 ```bash
 bun run ~/.claude/skills/art/tools/generate-image.ts \
-  --model nano-banana-pro \
   --prompt "[YOUR PROMPT]" \
   --size 2K \
   --aspect-ratio 16:9 \
   --output /path/to/timeline.png
 ```
 
-**Model Recommendation:** nano-banana-pro (best for dates/text rendering)
+**Model:** Nano Banana 2 (default) (best for dates/text rendering)
 
 ---
 
@@ -321,7 +320,7 @@ bun run ~/.claude/skills/art/tools/generate-image.ts \
 2. Design layout (orientation, metaphors, spacing)
 3. Construct prompt with illustrated progression
 4. Choose aspect ratio for orientation
-5. Generate with nano-banana-pro
+5. Generate image
 6. Validate for clarity and visual narrative
 ```
 

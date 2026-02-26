@@ -253,14 +253,13 @@ CRITICAL REQUIREMENTS:
 
 ```bash
 bun run ~/.claude/skills/art/tools/generate-image.ts \
-  --model nano-banana-pro \
   --prompt "[YOUR PROMPT]" \
   --size 2K \
   --aspect-ratio 16:9 \
   --output /path/to/comparison.png
 ```
 
-**Model Recommendation:** nano-banana-pro (text-heavy comparisons need good rendering)
+**Model:** Nano Banana 2 (default) (text-heavy comparisons need good rendering)
 
 ---
 
@@ -320,7 +319,7 @@ bun run ~/.claude/skills/art/tools/generate-image.ts \
 2. Design split layout (division style, alignment, emphasis)
 3. Construct prompt with color-coded options
 4. Choose aspect ratio for layout
-5. Generate with nano-banana-pro
+5. Generate image
 6. Validate balance and alignment
 ```
 

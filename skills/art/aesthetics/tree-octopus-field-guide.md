@@ -127,7 +127,7 @@ The following generated plates represent the target aesthetic and should be used
 
 | Parameter | Value |
 |-----------|-------|
-| **Model** | nano-banana-pro (default); gpt-image-1 for label-heavy plates |
+| **Model** | nano-banana-2 (default); nano-banana-pro for complex multi-turn; gpt-image-1 for label-heavy plates |
 | **Resolution** | 2K |
 | **Portrait plates** | 3:4 aspect ratio |
 | **Landscape plates** | 16:9 aspect ratio |
