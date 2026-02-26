@@ -306,9 +306,15 @@ Nano Banana 2 can search the web in real-time during image generation. This mean
 - Recent public figures and events
 - Specific visual references the model can look up
 
-**How it works in our CLI:** Web search grounding is available via the API's `tools` parameter. Currently not exposed as a CLI flag — the model uses its training data by default. If you need grounded results, describe the subject specifically enough that the model's world knowledge covers it, or use `--reference-image` to provide the visual directly.
+**How to use in our CLI:** Add `--grounded` to enable web search during generation. The API receives `tools: [{ googleSearch: {} }]`, and the response includes grounding metadata — source URLs and the search queries the model used.
 
-> **Future enhancement:** A `--grounded` flag could enable `tools: [{"google_search": {}}]` in the API call, returning source attribution alongside the image.
+```bash
+bun run ~/.claude/skills/art/tools/generate-image.ts \
+  --prompt "The Sagrada Familia at golden hour, photorealistic" \
+  --grounded --size 2K --output /tmp/sagrada.png
+```
+
+The CLI logs grounding sources and search queries after generation, so you can see what the model looked up.
 
 **Prompt tip:** When you need accuracy for a known subject, be extremely specific: "the Tesla Cybertruck" not "a futuristic truck", "the Sagrada Familia in Barcelona" not "an ornate cathedral."
 

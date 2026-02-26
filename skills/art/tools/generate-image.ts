@@ -75,6 +75,7 @@ interface CLIArgs {
   referenceImage?: string; // Reference image path (Gemini models)
   removeBg?: boolean; // Remove background after generation using remove.bg API
   thinking?: ThinkingLevel; // Thinking level for Nano Banana 2
+  grounded?: boolean; // Enable web search grounding (Nano Banana 2)
 }
 
 // ============================================================================
@@ -153,8 +154,10 @@ OPTIONS:
                              Note: Not all models support transparency natively; may require post-processing
   --remove-bg                Remove background after generation using remove.bg API
                              Creates true transparency by removing the generated background
-  --thinking <level>         Thinking level for Nano Banana 2: minimal, low, medium, high
-                             minimal = fastest, high = best quality for complex compositions
+  --thinking <level>         Thinking level for Nano Banana 2: minimal, high
+                             minimal = fastest (default), high = best quality for complex compositions
+  --grounded                 Enable web search grounding during generation (Nano Banana 2 only)
+                             Provides real-time web/image search for accurate logos, landmarks, brands
   --creative-variations <n>  Generate N variations (appends -v1, -v2, etc. to output filename)
                              CLI mode: generates N images with same prompt (tests model variability)
   --help, -h                 Show this help message
@@ -179,14 +182,17 @@ EXAMPLES:
   generate-image --model gpt-image-1 --prompt "..." --creative-variations 3 --output /tmp/essay.png
   # Outputs: /tmp/essay-v1.png, /tmp/essay-v2.png, /tmp/essay-v3.png
 
-  # Generate with reference image for style guidance (Nano Banana Pro only)
+  # Generate with reference image for style guidance (Gemini models)
   generate-image --model nano-banana-pro --prompt "Signal Over Noise themed illustration..." \\
     --reference-image /tmp/style-reference.png --size 2K --aspect-ratio 16:9
 
+  # Web search grounded generation (NB2 only — accurate logos, landmarks, brands)
+  generate-image --prompt "The Sagrada Familia at golden hour" --grounded --size 2K --output /tmp/sagrada.png
+
 ENVIRONMENT VARIABLES:
+  GOOGLE_API_KEY       Required for nano-banana-2 and nano-banana-pro models
   REPLICATE_API_TOKEN  Required for flux and nano-banana models
   OPENAI_API_KEY       Required for gpt-image-1 model
-  GOOGLE_API_KEY       Required for nano-banana-pro model
   REMOVEBG_API_KEY     Required for --remove-bg flag
 
 ERROR CODES:
@@ -235,6 +241,10 @@ function parseArgs(argv: string[]): CLIArgs {
     }
     if (key === "remove-bg") {
       parsed.removeBg = true;
+      continue;
+    }
+    if (key === "grounded") {
+      parsed.grounded = true;
       continue;
     }
 
@@ -309,6 +319,11 @@ function parseArgs(argv: string[]): CLIArgs {
   // Validate thinking is only used with nano-banana-2
   if (parsed.thinking && parsed.model !== "nano-banana-2") {
     throw new CLIError("--thinking is only supported with --model nano-banana-2");
+  }
+
+  // Validate grounded is only used with nano-banana-2
+  if (parsed.grounded && parsed.model !== "nano-banana-2") {
+    throw new CLIError("--grounded is only supported with --model nano-banana-2");
   }
 
   // Validate size based on model
@@ -566,7 +581,8 @@ async function generateWithNanoBanana2(
   aspectRatio: ReplicateSize,
   output: string,
   referenceImage?: string,
-  thinking?: ThinkingLevel
+  thinking?: ThinkingLevel,
+  grounded?: boolean
 ): Promise<void> {
   const apiKey = process.env.GOOGLE_API_KEY;
   if (!apiKey) {
@@ -576,10 +592,11 @@ async function generateWithNanoBanana2(
   const ai = new GoogleGenAI({ apiKey });
 
   const thinkingLabel = thinking ? `, thinking=${thinking}` : "";
+  const groundedLabel = grounded ? ", grounded" : "";
   if (referenceImage) {
-    console.log(`Generating with Nano Banana 2 (Gemini 3.1 Flash Image) at ${size} ${aspectRatio}${thinkingLabel} with reference image...`);
+    console.log(`Generating with Nano Banana 2 (Gemini 3.1 Flash Image) at ${size} ${aspectRatio}${thinkingLabel}${groundedLabel} with reference image...`);
   } else {
-    console.log(`Generating with Nano Banana 2 (Gemini 3.1 Flash Image) at ${size} ${aspectRatio}${thinkingLabel}...`);
+    console.log(`Generating with Nano Banana 2 (Gemini 3.1 Flash Image) at ${size} ${aspectRatio}${thinkingLabel}${groundedLabel}...`);
   }
 
   // Prepare content parts
@@ -633,14 +650,26 @@ async function generateWithNanoBanana2(
     };
   }
 
-  const response = await ai.models.generateContent({
+  // Build request options
+  const requestOptions: Record<string, any> = {
     model: "gemini-3.1-flash-image-preview",
     contents: [{ parts }],
     config,
-  });
+  };
+
+  // Add Google Search tool for grounding
+  if (grounded) {
+    requestOptions.config = {
+      ...config,
+      tools: [{ googleSearch: {} }],
+    };
+  }
+
+  const response = await ai.models.generateContent(requestOptions);
 
   // Extract image data from response
   let imageData: string | undefined;
+  let textResponse: string | undefined;
 
   if (response.candidates && response.candidates.length > 0) {
     const candidate = response.candidates[0];
@@ -656,9 +685,30 @@ async function generateWithNanoBanana2(
     for (const part of parts) {
       if (part.inlineData && part.inlineData.data) {
         imageData = part.inlineData.data;
-        break;
+      } else if (part.text) {
+        textResponse = part.text;
       }
     }
+
+    // Log grounding metadata if present
+    if (grounded && candidate.groundingMetadata) {
+      const gm = candidate.groundingMetadata as any;
+      if (gm.groundingChunks && gm.groundingChunks.length > 0) {
+        console.log("\nGrounding sources:");
+        for (const chunk of gm.groundingChunks) {
+          if (chunk.web) {
+            console.log(`  - ${chunk.web.title || "Source"}: ${chunk.web.uri}`);
+          }
+        }
+      }
+      if (gm.webSearchQueries && gm.webSearchQueries.length > 0) {
+        console.log(`Search queries used: ${gm.webSearchQueries.join(", ")}`);
+      }
+    }
+  }
+
+  if (textResponse) {
+    console.log(`\nModel response: ${textResponse}`);
   }
 
   if (!imageData) {
@@ -725,7 +775,8 @@ async function main(): Promise<void> {
               args.aspectRatio!,
               varOutput,
               args.referenceImage,
-              args.thinking
+              args.thinking,
+              args.grounded
             )
           );
         } else if (args.model === "gpt-image-1") {
@@ -758,7 +809,8 @@ async function main(): Promise<void> {
         args.aspectRatio!,
         args.output,
         args.referenceImage,
-        args.thinking
+        args.thinking,
+        args.grounded
       );
     } else if (args.model === "gpt-image-1") {
       await generateWithGPTImage(finalPrompt, args.size as OpenAISize, args.output);

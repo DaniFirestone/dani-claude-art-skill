@@ -145,6 +145,16 @@ bun run skills/art/tools/generate-image.ts \
   --output /tmp/variations.png
 ```
 
+### Web search grounded generation (accurate logos, landmarks, brands)
+
+```bash
+bun run skills/art/tools/generate-image.ts \
+  --prompt "The Sagrada Familia cathedral in Barcelona at golden hour, photorealistic" \
+  --grounded \
+  --size 2K \
+  --output /tmp/sagrada.png
+```
+
 ### Background removal
 
 ```bash
@@ -164,6 +174,7 @@ bun run skills/art/tools/generate-image.ts \
 --output         Output file path (required)
 --reference-image  Reference image for style transfer (Gemini models only)
 --thinking       Thinking level: minimal, high (NB2 only)
+--grounded       Enable web search grounding (NB2 only) — accurate logos, landmarks, brands
 --transparent    Request transparent background (gpt-image-1 only)
 --remove-bg      Remove background after generation (requires REMOVEBG_API_KEY)
 --creative-variations  Generate 4 creative variations
