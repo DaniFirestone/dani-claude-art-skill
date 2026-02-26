@@ -1,24 +1,28 @@
 # claude-art-skill
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Claude Code](https://img.shields.io/badge/Claude_Code-Plugin-blue)](https://claude.com/claude-code)
+[![Claude Code](https://img.shields.io/badge/Claude_Code-Skill-blue)](https://docs.anthropic.com/en/docs/claude-code)
 
 Complete visual content system for Claude Code — 16 specialized workflows, 4 AI image models, aesthetic routing, and brand customization.
 
-The default model is **Nano Banana 2** (`gemini-3.1-flash-image-preview`), Google's latest image generation model combining Pro-level quality with Flash speed at ~50% lower cost.
+The default model is **Nano Banana 2** (`gemini-3.1-flash-image-preview`), combining Pro-level quality with Flash speed at ~50% lower cost.
 
 ![Architecture](docs/images/architecture-diagram.png)
 
 ## Installation
 
+Clone the repo into your Claude Code skills directory:
+
 ```bash
-claude plugin install aplaceforallmystuff/claude-art-skill
+git clone https://github.com/aplaceforallmystuff/claude-art-skill.git /tmp/claude-art-skill
+cp -r /tmp/claude-art-skill/skills/art ~/.claude/skills/art
+rm -rf /tmp/claude-art-skill
 ```
 
 Then install the image generation dependencies:
 
 ```bash
-cd ~/.claude/plugins/cache/aplaceforallmystuff/claude-art-skill/*/skills/art/tools
+cd ~/.claude/skills/art/tools
 bun install
 ```
 
@@ -67,7 +71,7 @@ The skill automatically routes to the appropriate workflow based on your request
 
 ### Nano Banana 2 Highlights
 
-Nano Banana 2 (`gemini-3.1-flash-image-preview`) launched February 2026 and is the recommended default:
+Nano Banana 2 (`gemini-3.1-flash-image-preview`) is the recommended default:
 
 - **Pro-level quality at Flash speed** — roughly 50% cheaper than Nano Banana Pro
 - **Web search grounding** — real-time web + image search for accurate logos, landmarks, brand identities
@@ -78,17 +82,14 @@ Nano Banana 2 (`gemini-3.1-flash-image-preview`) launched February 2026 and is t
 - **Configurable thinking** — `minimal` (default) or `high` for complex compositions
 - **Extended aspect ratios** — 1:4, 4:1, 1:8, 8:1, 2:3, 3:4, 4:5, 5:4 (in addition to standard ratios)
 
-For more details, see:
-- [Nano Banana 2 announcement](https://blog.google/innovation-and-ai/technology/ai/nano-banana-2/) — Google's official blog post
-- [Build with Nano Banana 2](https://blog.google/innovation-and-ai/technology/developers-tools/build-with-nano-banana-2/) — developer-focused overview
-- [Gemini API image generation docs](https://ai.google.dev/gemini-api/docs/image-generation) — full API reference
+For more details, see the [Gemini API image generation docs](https://ai.google.dev/gemini-api/docs/image-generation).
 
 ## CLI Examples
 
 ### Basic generation
 
 ```bash
-bun run skills/art/tools/generate-image.ts \
+bun run ~/.claude/skills/art/tools/generate-image.ts \
   --prompt "Hand-drawn sketch of interconnected nodes on cream background" \
   --size 2K \
   --aspect-ratio 16:9 \
@@ -98,7 +99,7 @@ bun run skills/art/tools/generate-image.ts \
 ### Quick preview at 512px (fast, cheap)
 
 ```bash
-bun run skills/art/tools/generate-image.ts \
+bun run ~/.claude/skills/art/tools/generate-image.ts \
   --prompt "Isometric diorama of a home office" \
   --size 512px \
   --output /tmp/preview.png
@@ -107,7 +108,7 @@ bun run skills/art/tools/generate-image.ts \
 ### Using thinking for complex compositions
 
 ```bash
-bun run skills/art/tools/generate-image.ts \
+bun run ~/.claude/skills/art/tools/generate-image.ts \
   --prompt "Technical architecture diagram showing 5 microservices connected by arrows, labeled, LEFT TO RIGHT flow" \
   --thinking high \
   --size 2K \
@@ -118,7 +119,7 @@ bun run skills/art/tools/generate-image.ts \
 ### With a reference image for style transfer
 
 ```bash
-bun run skills/art/tools/generate-image.ts \
+bun run ~/.claude/skills/art/tools/generate-image.ts \
   --prompt "Apply this visual style to a portrait of a lighthouse at sunset" \
   --reference-image /path/to/style-reference.png \
   --size 2K \
@@ -128,7 +129,7 @@ bun run skills/art/tools/generate-image.ts \
 ### Using Nano Banana Pro for multi-turn refinement
 
 ```bash
-bun run skills/art/tools/generate-image.ts \
+bun run ~/.claude/skills/art/tools/generate-image.ts \
   --model nano-banana-pro \
   --prompt "Product photo of a ceramic mug on marble surface, soft shadows" \
   --size 4K \
@@ -139,7 +140,7 @@ bun run skills/art/tools/generate-image.ts \
 ### Creative variations (generates 4 options)
 
 ```bash
-bun run skills/art/tools/generate-image.ts \
+bun run ~/.claude/skills/art/tools/generate-image.ts \
   --prompt "Abstract representation of data flowing through a neural network" \
   --creative-variations \
   --output /tmp/variations.png
@@ -148,7 +149,7 @@ bun run skills/art/tools/generate-image.ts \
 ### Web search grounded generation (accurate logos, landmarks, brands)
 
 ```bash
-bun run skills/art/tools/generate-image.ts \
+bun run ~/.claude/skills/art/tools/generate-image.ts \
   --prompt "The Sagrada Familia cathedral in Barcelona at golden hour, photorealistic" \
   --grounded \
   --size 2K \
@@ -158,7 +159,7 @@ bun run skills/art/tools/generate-image.ts \
 ### Background removal
 
 ```bash
-bun run skills/art/tools/generate-image.ts \
+bun run ~/.claude/skills/art/tools/generate-image.ts \
   --prompt "Cartoon mascot character" \
   --remove-bg \
   --output /tmp/mascot-nobg.png
@@ -211,13 +212,11 @@ The skill ships with a warm hand-drawn sketch aesthetic as default. To add your 
 3. Define a **Base Prompt Prefix** — the consistency lock that ensures all your images look cohesive
 4. When generating, tell Claude which brand to use: "Create a header using my-brand aesthetic"
 
-See existing aesthetics in `skills/art/aesthetics/` for examples.
+See `skills/art/aesthetic.md` for the default example format.
 
 ## Further Reading
 
-- [Nano Banana 2 announcement](https://blog.google/innovation-and-ai/technology/ai/nano-banana-2/) — capabilities overview, subject consistency, web search grounding
-- [Build with Nano Banana 2](https://blog.google/innovation-and-ai/technology/developers-tools/build-with-nano-banana-2/) — developer API details, pricing, integration
-- [Gemini API image generation docs](https://ai.google.dev/gemini-api/docs/image-generation) — full API reference: parameters, thinking config, aspect ratios, reference images, multi-turn editing
+- [Gemini API image generation docs](https://ai.google.dev/gemini-api/docs/image-generation) — full API reference for parameters, thinking config, aspect ratios, reference images, and multi-turn editing
 - [Nano Banana prompting guide](skills/art/nano-banana-guide.md) — detailed prompt formulas, action verbs, mood vocabulary, and brand integration templates
 
 ## License
