@@ -192,17 +192,15 @@ Add `--thinking` to give the model more reasoning time for complex compositions:
 ```bash
 bun run ~/.claude/skills/art/tools/generate-image.ts \
   --prompt "Complex multi-element scene..." \
-  --thinking medium --output /path/to/output.png
+  --thinking high --output /path/to/output.png
 ```
 
 | Level | Use When |
 |-------|----------|
-| `minimal` | Simple subjects, minor improvement |
-| `low` | Moderate complexity |
-| `medium` | Multi-element compositions, style matching |
-| `high` | Maximum reasoning — complex layouts, precise positioning |
+| `minimal` | Default — balances quality and latency |
+| `high` | Complex layouts, precise positioning, multi-element scenes |
 
-Only works with `nano-banana-2`. Adds latency but improves compositional accuracy.
+Only works with `nano-banana-2`. Thinking is always on (minimal by default). Use `high` when composition accuracy matters more than speed.
 
 ### Common Diagram Pitfalls (Avoid These)
 

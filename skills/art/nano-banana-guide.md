@@ -13,7 +13,7 @@
 | **Nano Banana 2** (default) | `gemini-3.1-flash-image-preview` | Fast iteration, most tasks, web search grounding |
 | **Nano Banana Pro** | `gemini-3-pro-image-preview` | Professional assets, advanced reasoning, complex compositions |
 
-Both models share the same API surface, prompt patterns, and capabilities below. Nano Banana 2 is faster and cheaper with Pro-level quality. Use Pro when maximum reasoning or complex multi-turn editing is needed.
+Both models share the same API surface, prompt patterns, and capabilities below. Nano Banana 2 is ~50% cheaper ($0.067/image vs $0.134) with Pro-level quality at Flash speed. Use Pro when maximum reasoning or complex multi-turn editing is needed.
 
 ### Key capabilities shared by both models:
 
@@ -22,7 +22,17 @@ Both models share the same API surface, prompt patterns, and capabilities below.
 - **World knowledge** — Uses Gemini's context for complex semantic edits
 - **Style transfer** — Extract visual characteristics from one image, apply to another
 - **Consistency** — Maintains subject likeness across different edits and scenes
-- **Web search grounding** (Nano Banana 2) — Powered by real-time web and image search
+
+### Nano Banana 2 exclusive capabilities:
+
+- **Web search grounding** — Real-time web + image search during generation for accurate logos, landmarks, brand identities, and recent events
+- **Extended aspect ratios** — 1:4, 4:1, 1:8, 8:1, 2:3, 3:4, 4:5, 5:4 (in addition to standard ratios)
+- **512px preview size** — Fast, cheap previews before committing to full resolution
+- **Configurable thinking** — Adjust reasoning depth for complex compositions
+- **Up to 5 subject consistency** — Maintain character resemblance across generations
+- **Up to 14 object fidelity** — Keep visual detail across complex scenes
+- **Precision text rendering** — Accurate, legible text for mockups, cards, infographics
+- **In-image translation** — Localize text within images across languages
 
 ---
 
@@ -169,7 +179,7 @@ Place [subject] in [new environment]. Maintain [consistency elements]. Adjust li
 | Card thumbnail | 16:9 or 4:3 |
 | Profile/avatar | 1:1 |
 
-### Standard Aspect Ratios
+### Standard Aspect Ratios (both models)
 
 | Ratio | Use Case |
 |-------|----------|
@@ -177,30 +187,43 @@ Place [subject] in [new environment]. Maintain [consistency elements]. Adjust li
 | **16:9 (Landscape)** | Blog headers, YouTube thumbnails, presentations |
 | **9:16 (Portrait)** | Stories, mobile wallpapers, vertical video covers, narrow form backgrounds |
 | **4:3** | Presentations, traditional photos |
-| **3:4** | Portrait photography, book covers |
 | **3:2** | Classic photography, print-ready |
 | **21:9 (Ultrawide)** | Cinematic headers, panoramic |
+
+### Extended Aspect Ratios (Nano Banana 2 only)
+
+| Ratio | Use Case |
+|-------|----------|
+| **3:4** | Portrait photography, book covers |
+| **2:3** | Tall portrait, phone wallpapers |
+| **4:5** | Instagram portrait, social cards |
+| **5:4** | Slightly wider than square, print |
+| **1:4** | Ultra-tall banners, vertical strips |
+| **4:1** | Ultra-wide banners, horizontal strips |
+| **1:8** | Extreme vertical (sidebar, scroll) |
+| **8:1** | Extreme horizontal (panoramic banner) |
 
 ---
 
 ## Thinking Levels (Nano Banana 2 only)
 
-The `--thinking` flag gives the model extra reasoning time before generating. This improves compositional accuracy for complex prompts.
+The `--thinking` flag gives the model extra reasoning time before generating. Thinking is always on — `minimal` is the default. You're billed for thinking tokens regardless of level.
 
-| Level | Latency | Best For |
-|-------|---------|----------|
-| `minimal` | Slight | Simple tweaks where default quality is almost right |
-| `low` | +~2s | Moderate scenes, better element placement |
-| `medium` | +~5s | Multi-element compositions, precise style matching |
-| `high` | +~10s | Complex layouts, exact positioning, maximum accuracy |
+| Level | Best For |
+|-------|----------|
+| `minimal` | Default — balances quality and latency for most tasks |
+| `high` | Complex layouts, exact positioning, multi-element compositions |
 
-**When to use thinking:**
+> **Note:** The official API documents `minimal` and `high`. Other levels (`low`, `medium`) are accepted by the CLI but may map to these two internally.
+
+**When to use `--thinking high`:**
 - Prompt describes 3+ distinct elements with specific spatial relationships
 - Previous generation placed elements incorrectly
 - Style transfer needs to be precise
 - Architecture/diagram-style images with labeled components
+- Text-heavy images where placement matters
 
-**When to skip thinking:**
+**When to stay on `minimal` (default):**
 - Simple single-subject images
 - Fast iteration / exploration phase
 - 512px previews (speed matters more)
@@ -273,9 +296,71 @@ COMPOSITION: 40-50% negative space, minimal elements, generous breathing room.
 
 ---
 
+## Web Search Grounding (Nano Banana 2 only)
+
+Nano Banana 2 can search the web in real-time during image generation. This means it can accurately render things it hasn't seen in training data: recent logos, current landmarks, brand identities, recent events.
+
+**What it enables:**
+- Accurate brand logos and product packaging
+- Real landmarks and buildings as they currently look
+- Recent public figures and events
+- Specific visual references the model can look up
+
+**How it works in our CLI:** Web search grounding is available via the API's `tools` parameter. Currently not exposed as a CLI flag — the model uses its training data by default. If you need grounded results, describe the subject specifically enough that the model's world knowledge covers it, or use `--reference-image` to provide the visual directly.
+
+> **Future enhancement:** A `--grounded` flag could enable `tools: [{"google_search": {}}]` in the API call, returning source attribution alongside the image.
+
+**Prompt tip:** When you need accuracy for a known subject, be extremely specific: "the Tesla Cybertruck" not "a futuristic truck", "the Sagrada Familia in Barcelona" not "an ornate cathedral."
+
+---
+
+## Text Rendering
+
+Nano Banana 2 has significantly improved text rendering over previous models. It can generate accurate, legible text inside images — useful for mockups, greeting cards, infographics, and marketing assets.
+
+**What works well:**
+- Short text (titles, headings, labels, button text)
+- Marketing mockups with product names
+- Greeting cards and invitations
+- Infographic labels and data callouts
+- Translated/localized text within images
+
+**Prompting for text:**
+- Spell out the exact text you want in quotes: `with the text "Signal Over Noise" centered at the top`
+- Specify font style: "bold sans-serif", "handwritten script", "monospace"
+- Specify placement: "text centered below the icon", "title in the upper third"
+- For multi-language: "translate the heading to Spanish" works in-context
+
+**Limitations (still apply):**
+- Long paragraphs will likely garble
+- Very small text at low resolution may be illegible
+- Complex typography (kerning, ligatures) is inconsistent
+- For production text, still best to **generate artwork first, composite text separately** (as per existing SKILL.md guidance)
+
+---
+
+## Subject Consistency and Multi-Object Limits
+
+| Model | Max Consistent Characters | Max High-Fidelity Objects | Max Reference Images |
+|-------|--------------------------|--------------------------|---------------------|
+| **Nano Banana 2** | 5 | 14 | Up to 14 combined |
+| **Nano Banana Pro** | 5 | 6 | Up to 6 combined |
+
+**What this means in practice:**
+- NB2 can keep faces, outfits, and features stable across up to 5 characters in a scene
+- It can maintain visual detail on up to 14 distinct objects (props, furniture, background elements)
+- Instruction following is tighter than previous Flash models — less "freestyling" on detailed prompts
+
+**Prompt tip for multi-subject scenes:**
+- Name each character or object explicitly
+- Describe distinguishing features: "the woman in the red jacket", "the tall man with glasses"
+- Specify spatial relationships: "standing to the left of", "sitting behind the desk"
+
+---
+
 ## Semantic World Knowledge
 
-Nano Banana Pro applies real-world knowledge beyond pure aesthetics. Use this for complex, realistic edits:
+Both models apply real-world knowledge beyond pure aesthetics. Use this for complex, realistic edits:
 
 ### Physics-Based Interactions
 
@@ -324,7 +409,7 @@ When using `--reference-image` with Nano Banana 2 or Nano Banana Pro:
 
 ```bash
 bun run ~/.claude/skills/art/tools/generate-image.ts \
-  --model nano-banana-pro \
+  --model nano-banana-2 \
   --prompt "[Your prompt including style transfer instructions]" \
   --reference-image /path/to/reference.png \
   --size 2K \
@@ -337,8 +422,28 @@ bun run ~/.claude/skills/art/tools/generate-image.ts \
 - Subject consistency across variations
 - Brand alignment for matching existing assets
 
+**Per-model reference limits:**
+
+| Model | Max Character References | Max Object References | Combined Max |
+|-------|------------------------|----------------------|-------------|
+| **Nano Banana 2** | 4 | 10 | 14 |
+| **Nano Banana Pro** | 5 | 6 | ~6 total |
+
+> Our CLI currently supports a single `--reference-image`. For multi-reference workflows, use the API directly.
+
+---
+
+## Pricing Reference
+
+| Model | Cost per Image | Input Tokens | Output Tokens |
+|-------|---------------|-------------|--------------|
+| **Nano Banana 2** | ~$0.067 | $0.50/M | $3.00/M |
+| **Nano Banana Pro** | ~$0.134 | $1.25/M | $5.00/M |
+
+Prompt tokens are negligible (50-200 tokens per prompt = ~$0.0001). Thinking tokens are billed regardless of level. NB2 is roughly **50% cheaper** than Pro for equivalent quality.
+
 ---
 
 ## Credits
 
-Content synthesized from *The Complete Nano Banana AI Image Editing with Google Gemini* by Mammoth Club, adapted for Cerebro Art Skill with Signal Over Noise brand integration.
+Content synthesized from *The Complete Nano Banana AI Image Editing with Google Gemini* by Mammoth Club, adapted for Cerebro Art Skill with Signal Over Noise brand integration. Updated 2026-02-26 with Nano Banana 2 launch details from Google developer blog, AI docs, and launch coverage.
