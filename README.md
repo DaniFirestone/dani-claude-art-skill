@@ -86,6 +86,8 @@ bun run ~/.claude/skills/art/tools/generate-image.ts \
   --output /tmp/header.png
 ```
 
+![Basic generation example](docs/images/example-basic.png)
+
 ### Quick preview at 512px (fast, cheap)
 
 ```bash
@@ -94,6 +96,8 @@ bun run ~/.claude/skills/art/tools/generate-image.ts \
   --size 512px \
   --output /tmp/preview.png
 ```
+
+![512px preview example](docs/images/example-preview.png)
 
 ### Using thinking for complex compositions
 
@@ -106,15 +110,7 @@ bun run ~/.claude/skills/art/tools/generate-image.ts \
   --output /tmp/architecture.png
 ```
 
-### With a reference image for style transfer
-
-```bash
-bun run ~/.claude/skills/art/tools/generate-image.ts \
-  --prompt "Apply this visual style to a portrait of a lighthouse at sunset" \
-  --reference-image /path/to/style-reference.png \
-  --size 2K \
-  --output /tmp/styled.png
-```
+![Thinking mode example](docs/images/example-thinking.png)
 
 ### Using Nano Banana Pro for multi-turn refinement
 
@@ -122,19 +118,12 @@ bun run ~/.claude/skills/art/tools/generate-image.ts \
 bun run ~/.claude/skills/art/tools/generate-image.ts \
   --model nano-banana-pro \
   --prompt "Product photo of a ceramic mug on marble surface, soft shadows" \
-  --size 4K \
+  --size 2K \
   --aspect-ratio 1:1 \
   --output /tmp/product.png
 ```
 
-### Creative variations (generates 4 options)
-
-```bash
-bun run ~/.claude/skills/art/tools/generate-image.ts \
-  --prompt "Abstract representation of data flowing through a neural network" \
-  --creative-variations \
-  --output /tmp/variations.png
-```
+![Nano Banana Pro example](docs/images/example-pro.png)
 
 ### Web search grounded generation (accurate logos, landmarks, brands)
 
@@ -146,13 +135,26 @@ bun run ~/.claude/skills/art/tools/generate-image.ts \
   --output /tmp/sagrada.png
 ```
 
-### Background removal
+![Grounded generation example](docs/images/example-grounded.png)
+
+### Other features
 
 ```bash
+# Style transfer with a reference image
+bun run ~/.claude/skills/art/tools/generate-image.ts \
+  --prompt "Apply this visual style to a lighthouse at sunset" \
+  --reference-image /path/to/style-ref.png \
+  --size 2K --output /tmp/styled.png
+
+# Generate 3 creative variations
+bun run ~/.claude/skills/art/tools/generate-image.ts \
+  --prompt "Abstract neural network" \
+  --creative-variations 3 --output /tmp/art.png
+
+# Background removal (requires REMOVEBG_API_KEY)
 bun run ~/.claude/skills/art/tools/generate-image.ts \
   --prompt "Cartoon mascot character" \
-  --remove-bg \
-  --output /tmp/mascot-nobg.png
+  --remove-bg --output /tmp/mascot.png
 ```
 
 ### All CLI options
