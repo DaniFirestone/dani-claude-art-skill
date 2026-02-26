@@ -1,20 +1,15 @@
 #!/usr/bin/env bun
 
 /**
- * generate-image - Cerebro Image Generation CLI
+ * generate-image - Image Generation CLI
  *
- * Generate Signal Over Noise branded images using Flux 1.1 Pro, Nano Banana, Nano Banana Pro, or GPT-image-1.
+ * Generate images using Nano Banana 2 or Nano Banana Pro (Google Gemini).
  * Follows llcli pattern for deterministic, composable CLI design.
  *
  * Usage:
- *   generate-image --model nano-banana-pro --prompt "..." --size 16:9 --output /tmp/image.png
- *
- * Assimilated from Personal_AI_Infrastructure (2026-01-04)
- * Adapted for Signal Over Noise brand aesthetic
+ *   generate-image --prompt "..." --size 2K --aspect-ratio 16:9 --output /tmp/image.png
  */
 
-import Replicate from "replicate";
-import OpenAI from "openai";
 import { GoogleGenAI } from "@google/genai";
 import { writeFile, readFile } from "node:fs/promises";
 import { extname, resolve } from "node:path";
@@ -57,25 +52,23 @@ async function loadEnv(): Promise<void> {
 // Types
 // ============================================================================
 
-type Model = "flux" | "nano-banana" | "nano-banana-pro" | "nano-banana-2" | "gpt-image-1";
-type ReplicateSize = "1:1" | "16:9" | "3:2" | "2:3" | "3:4" | "4:3" | "4:5" | "5:4" | "9:16" | "21:9";
-type OpenAISize = "1024x1024" | "1536x1024" | "1024x1536";
+type Model = "nano-banana-pro" | "nano-banana-2";
+type AspectRatio = "1:1" | "1:4" | "1:8" | "2:3" | "3:2" | "3:4" | "4:1" | "4:3" | "4:5" | "5:4" | "8:1" | "9:16" | "16:9" | "21:9";
 type GeminiSize = "512px" | "1K" | "2K" | "4K";
-type Size = ReplicateSize | OpenAISize | GeminiSize;
 type ThinkingLevel = "minimal" | "low" | "medium" | "high";
 
 interface CLIArgs {
   model: Model;
   prompt: string;
-  size: Size;
+  size: GeminiSize;
   output: string;
   creativeVariations?: number;
-  aspectRatio?: ReplicateSize; // For Gemini models
-  transparent?: boolean; // Enable transparent background
-  referenceImage?: string; // Reference image path (Gemini models)
-  removeBg?: boolean; // Remove background after generation using remove.bg API
-  thinking?: ThinkingLevel; // Thinking level for Nano Banana 2
-  grounded?: boolean; // Enable web search grounding (Nano Banana 2)
+  aspectRatio: AspectRatio;
+  transparent?: boolean;
+  referenceImage?: string;
+  removeBg?: boolean;
+  thinking?: ThinkingLevel;
+  grounded?: boolean;
 }
 
 // ============================================================================
@@ -84,16 +77,13 @@ interface CLIArgs {
 
 const DEFAULTS = {
   model: "nano-banana-2" as Model,
-  size: "16:9" as Size,
-  output: "/tmp/cerebro-image.png",
+  size: "2K" as GeminiSize,
+  aspectRatio: "16:9" as AspectRatio,
+  output: "/tmp/generated-image.png",
 };
 
-const REPLICATE_SIZES: ReplicateSize[] = ["1:1", "16:9", "3:2", "2:3", "3:4", "4:3", "4:5", "5:4", "9:16", "21:9"];
-const OPENAI_SIZES: OpenAISize[] = ["1024x1024", "1536x1024", "1024x1536"];
 const GEMINI_SIZES: GeminiSize[] = ["512px", "1K", "2K", "4K"];
-
-// Aspect ratio mapping for Gemini (used with image size like 2K)
-const GEMINI_ASPECT_RATIOS: ReplicateSize[] = ["1:1", "1:4", "1:8", "2:3", "3:2", "3:4", "4:1", "4:3", "4:5", "5:4", "8:1", "9:16", "16:9", "21:9"];
+const GEMINI_ASPECT_RATIOS: AspectRatio[] = ["1:1", "1:4", "1:8", "2:3", "3:2", "3:4", "4:1", "4:3", "4:5", "5:4", "8:1", "9:16", "16:9", "21:9"];
 
 // ============================================================================
 // Error Handling
@@ -128,71 +118,61 @@ function handleError(error: unknown): never {
 
 function showHelp(): void {
   console.log(`
-generate-image - Cerebro Image Generation CLI
+generate-image - Image Generation CLI
 
-Generate Signal Over Noise branded images using Nano Banana 2, Nano Banana Pro, Flux 1.1 Pro, or GPT-image-1.
+Generate images using Nano Banana 2 (default) or Nano Banana Pro.
 
 USAGE:
-  generate-image --model <model> --prompt "<prompt>" [OPTIONS]
+  generate-image --prompt "<prompt>" [OPTIONS]
 
 REQUIRED:
-  --model <model>      Model to use: nano-banana-2 (default), nano-banana-pro, flux, nano-banana, gpt-image-1
   --prompt <text>      Image generation prompt (quote if contains spaces)
 
 OPTIONS:
-  --size <size>              Image size/aspect ratio (default: 16:9)
-                             Replicate (flux, nano-banana): 1:1, 16:9, 3:2, 2:3, 3:4, 4:3, 4:5, 5:4, 9:16, 21:9
-                             OpenAI (gpt-image-1): 1024x1024, 1536x1024, 1024x1536
-                             Gemini (nano-banana-pro, nano-banana-2): 512px, 1K, 2K, 4K (resolution); aspect ratio inferred from context or defaults to 16:9
-  --aspect-ratio <ratio>     Aspect ratio for Gemini nano-banana-pro (default: 16:9)
-                             Options: 1:1, 2:3, 3:2, 3:4, 4:3, 4:5, 5:4, 9:16, 16:9, 21:9
-  --output <path>            Output file path (default: /tmp/cerebro-image.png)
-  --reference-image <path>   Reference image for style/composition guidance (Nano Banana Pro and Nano Banana 2)
-                             Accepts: PNG, JPEG, WebP images
-                             Model will use this image as visual reference while following text prompt
-  --transparent              Enable transparent background (adds transparency instructions to prompt)
-                             Note: Not all models support transparency natively; may require post-processing
-  --remove-bg                Remove background after generation using remove.bg API
-                             Creates true transparency by removing the generated background
-  --thinking <level>         Thinking level for Nano Banana 2: minimal, high
-                             minimal = fastest (default), high = best quality for complex compositions
-  --grounded                 Enable web search grounding during generation (Nano Banana 2 only)
-                             Provides real-time web/image search for accurate logos, landmarks, brands
-  --creative-variations <n>  Generate N variations (appends -v1, -v2, etc. to output filename)
-                             CLI mode: generates N images with same prompt (tests model variability)
-  --help, -h                 Show this help message
+  --model <model>          Model: nano-banana-2 (default), nano-banana-pro
+  --size <size>            Resolution: 512px, 1K, 2K (default), 4K
+                           512px is Nano Banana 2 only
+  --aspect-ratio <ratio>   Aspect ratio (default: 16:9)
+                           Standard: 1:1, 2:3, 3:2, 3:4, 4:3, 4:5, 5:4, 9:16, 16:9, 21:9
+                           Extended (NB2): 1:4, 4:1, 1:8, 8:1
+  --output <path>          Output file path (default: /tmp/generated-image.png)
+  --reference-image <path> Reference image for style/composition guidance
+                           Accepts: PNG, JPEG, WebP images
+  --transparent            Add transparency instructions to prompt
+  --remove-bg              Remove background after generation (requires REMOVEBG_API_KEY)
+  --thinking <level>       Thinking level for NB2: minimal (default), high
+                           Use high for complex compositions with precise positioning
+  --grounded               Enable web search grounding (NB2 only)
+                           Real-time web/image search for accurate logos, landmarks, brands
+  --creative-variations <n>  Generate N variations (appends -v1, -v2, etc.)
+  --help, -h               Show this help message
 
 EXAMPLES:
-  # Generate blog header with Nano Banana Pro (16:9, 2K quality)
-  generate-image --model nano-banana-pro --prompt "Abstract illustration..." --size 2K --aspect-ratio 16:9
+  # Generate blog header (default: NB2, 2K, 16:9)
+  generate-image --prompt "Abstract illustration of connected systems" --output /tmp/header.png
 
-  # Generate high-res 4K image with Nano Banana Pro
-  generate-image --model nano-banana-pro --prompt "Editorial cover..." --size 4K --aspect-ratio 3:2
+  # Quick preview at 512px
+  generate-image --prompt "Isometric diorama of a home office" --size 512px --output /tmp/preview.png
 
-  # Generate blog header with original Nano Banana (16:9)
-  generate-image --model nano-banana --prompt "Abstract illustration..." --size 16:9
+  # Complex composition with extended thinking
+  generate-image --prompt "Architecture diagram with 5 services..." --thinking high --output /tmp/arch.png
 
-  # Generate square image with Flux
-  generate-image --model flux --prompt "Minimal geometric art..." --size 1:1 --output /tmp/header.png
-
-  # Generate portrait with GPT-image-1
-  generate-image --model gpt-image-1 --prompt "Editorial cover..." --size 1024x1536
-
-  # Generate 3 creative variations (for testing model variability)
-  generate-image --model gpt-image-1 --prompt "..." --creative-variations 3 --output /tmp/essay.png
-  # Outputs: /tmp/essay-v1.png, /tmp/essay-v2.png, /tmp/essay-v3.png
-
-  # Generate with reference image for style guidance (Gemini models)
-  generate-image --model nano-banana-pro --prompt "Signal Over Noise themed illustration..." \\
-    --reference-image /tmp/style-reference.png --size 2K --aspect-ratio 16:9
-
-  # Web search grounded generation (NB2 only — accurate logos, landmarks, brands)
+  # Web search grounded (accurate real-world subjects)
   generate-image --prompt "The Sagrada Familia at golden hour" --grounded --size 2K --output /tmp/sagrada.png
 
+  # High-res with Nano Banana Pro
+  generate-image --model nano-banana-pro --prompt "Editorial cover..." --size 4K --aspect-ratio 3:2
+
+  # Style transfer with reference image
+  generate-image --prompt "Apply this style to a lighthouse at sunset" \\
+    --reference-image /tmp/style-ref.png --size 2K --output /tmp/styled.png
+
+  # Generate 3 creative variations
+  generate-image --prompt "Abstract neural network" --creative-variations 3 --output /tmp/art.png
+  # Outputs: /tmp/art-v1.png, /tmp/art-v2.png, /tmp/art-v3.png
+
 ENVIRONMENT VARIABLES:
-  GOOGLE_API_KEY       Required for nano-banana-2 and nano-banana-pro models
-  REPLICATE_API_TOKEN  Required for flux and nano-banana models
-  OPENAI_API_KEY       Required for gpt-image-1 model
+  GOOGLE_API_KEY       Required for both models
   REMOVEBG_API_KEY     Required for --remove-bg flag
 
 ERROR CODES:
@@ -221,6 +201,7 @@ function parseArgs(argv: string[]): CLIArgs {
   const parsed: Partial<CLIArgs> = {
     model: DEFAULTS.model,
     size: DEFAULTS.size,
+    aspectRatio: DEFAULTS.aspectRatio,
     output: DEFAULTS.output,
   };
 
@@ -256,31 +237,37 @@ function parseArgs(argv: string[]): CLIArgs {
 
     switch (key) {
       case "model":
-        if (value !== "flux" && value !== "nano-banana" && value !== "nano-banana-pro" && value !== "nano-banana-2" && value !== "gpt-image-1") {
-          throw new CLIError(`Invalid model: ${value}. Must be: flux, nano-banana, nano-banana-pro, nano-banana-2, or gpt-image-1`);
+        if (value !== "nano-banana-pro" && value !== "nano-banana-2") {
+          throw new CLIError(`Invalid model: ${value}. Must be: nano-banana-2 or nano-banana-pro`);
         }
         parsed.model = value;
-        i++; // Skip next arg (value)
+        i++;
         break;
       case "prompt":
         parsed.prompt = value;
-        i++; // Skip next arg (value)
+        i++;
         break;
       case "size":
-        parsed.size = value as Size;
-        i++; // Skip next arg (value)
+        if (!GEMINI_SIZES.includes(value as GeminiSize)) {
+          throw new CLIError(`Invalid size: ${value}. Must be: ${GEMINI_SIZES.join(", ")}`);
+        }
+        parsed.size = value as GeminiSize;
+        i++;
         break;
       case "aspect-ratio":
-        parsed.aspectRatio = value as ReplicateSize;
-        i++; // Skip next arg (value)
+        if (!GEMINI_ASPECT_RATIOS.includes(value as AspectRatio)) {
+          throw new CLIError(`Invalid aspect-ratio: ${value}. Must be: ${GEMINI_ASPECT_RATIOS.join(", ")}`);
+        }
+        parsed.aspectRatio = value as AspectRatio;
+        i++;
         break;
       case "output":
         parsed.output = value;
-        i++; // Skip next arg (value)
+        i++;
         break;
       case "reference-image":
         parsed.referenceImage = value;
-        i++; // Skip next arg (value)
+        i++;
         break;
       case "thinking":
         if (value !== "minimal" && value !== "low" && value !== "medium" && value !== "high") {
@@ -295,7 +282,7 @@ function parseArgs(argv: string[]): CLIArgs {
           throw new CLIError(`Invalid creative-variations: ${value}. Must be 1-10`);
         }
         parsed.creativeVariations = variations;
-        i++; // Skip next arg (value)
+        i++;
         break;
       default:
         throw new CLIError(`Unknown flag: ${flag}`);
@@ -305,15 +292,6 @@ function parseArgs(argv: string[]): CLIArgs {
   // Validate required arguments
   if (!parsed.prompt) {
     throw new CLIError("Missing required argument: --prompt");
-  }
-
-  if (!parsed.model) {
-    throw new CLIError("Missing required argument: --model");
-  }
-
-  // Validate reference-image is only used with Gemini models
-  if (parsed.referenceImage && parsed.model !== "nano-banana-pro" && parsed.model !== "nano-banana-2") {
-    throw new CLIError("--reference-image is only supported with --model nano-banana-pro or nano-banana-2");
   }
 
   // Validate thinking is only used with nano-banana-2
@@ -326,27 +304,9 @@ function parseArgs(argv: string[]): CLIArgs {
     throw new CLIError("--grounded is only supported with --model nano-banana-2");
   }
 
-  // Validate size based on model
-  if (parsed.model === "gpt-image-1") {
-    if (!OPENAI_SIZES.includes(parsed.size as OpenAISize)) {
-      throw new CLIError(`Invalid size for gpt-image-1: ${parsed.size}. Must be: ${OPENAI_SIZES.join(", ")}`);
-    }
-  } else if (parsed.model === "nano-banana-pro" || parsed.model === "nano-banana-2") {
-    if (!GEMINI_SIZES.includes(parsed.size as GeminiSize)) {
-      throw new CLIError(`Invalid size for ${parsed.model}: ${parsed.size}. Must be: ${GEMINI_SIZES.join(", ")}`);
-    }
-    // Validate aspect ratio if provided
-    if (parsed.aspectRatio && !GEMINI_ASPECT_RATIOS.includes(parsed.aspectRatio)) {
-      throw new CLIError(`Invalid aspect-ratio for ${parsed.model}: ${parsed.aspectRatio}. Must be: ${GEMINI_ASPECT_RATIOS.join(", ")}`);
-    }
-    // Default to 16:9 if not specified
-    if (!parsed.aspectRatio) {
-      parsed.aspectRatio = "16:9";
-    }
-  } else {
-    if (!REPLICATE_SIZES.includes(parsed.size as ReplicateSize)) {
-      throw new CLIError(`Invalid size for ${parsed.model}: ${parsed.size}. Must be: ${REPLICATE_SIZES.join(", ")}`);
-    }
+  // Validate 512px is only used with nano-banana-2
+  if (parsed.size === "512px" && parsed.model !== "nano-banana-2") {
+    throw new CLIError("512px size is only supported with --model nano-banana-2");
   }
 
   return parsed as CLIArgs;
@@ -397,86 +357,41 @@ async function removeBackground(imagePath: string): Promise<void> {
 }
 
 // ============================================================================
-// Image Generation
+// Reference Image Helper
 // ============================================================================
 
-async function generateWithFlux(prompt: string, size: ReplicateSize, output: string): Promise<void> {
-  const token = process.env.REPLICATE_API_TOKEN;
-  if (!token) {
-    throw new CLIError("Missing environment variable: REPLICATE_API_TOKEN");
+async function loadReferenceImage(imagePath: string): Promise<{ mimeType: string; data: string }> {
+  const imageBuffer = await readFile(imagePath);
+  const imageBase64 = imageBuffer.toString("base64");
+
+  const ext = extname(imagePath).toLowerCase();
+  let mimeType: string;
+  switch (ext) {
+    case ".png":
+      mimeType = "image/png";
+      break;
+    case ".jpg":
+    case ".jpeg":
+      mimeType = "image/jpeg";
+      break;
+    case ".webp":
+      mimeType = "image/webp";
+      break;
+    default:
+      throw new CLIError(`Unsupported image format: ${ext}. Supported: .png, .jpg, .jpeg, .webp`);
   }
 
-  const replicate = new Replicate({ auth: token });
-
-  console.log("Generating with Flux 1.1 Pro...");
-
-  const result = await replicate.run("black-forest-labs/flux-1.1-pro", {
-    input: {
-      prompt,
-      aspect_ratio: size,
-      output_format: "png",
-      output_quality: 95,
-      prompt_upsampling: false,
-    },
-  });
-
-  await writeFile(output, result);
-  console.log(`Image saved to ${output}`);
+  return { mimeType, data: imageBase64 };
 }
 
-async function generateWithNanoBanana(prompt: string, size: ReplicateSize, output: string): Promise<void> {
-  const token = process.env.REPLICATE_API_TOKEN;
-  if (!token) {
-    throw new CLIError("Missing environment variable: REPLICATE_API_TOKEN");
-  }
-
-  const replicate = new Replicate({ auth: token });
-
-  console.log("Generating with Nano Banana...");
-
-  const result = await replicate.run("google/nano-banana", {
-    input: {
-      prompt,
-      aspect_ratio: size,
-      output_format: "png",
-    },
-  });
-
-  await writeFile(output, result);
-  console.log(`Image saved to ${output}`);
-}
-
-async function generateWithGPTImage(prompt: string, size: OpenAISize, output: string): Promise<void> {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) {
-    throw new CLIError("Missing environment variable: OPENAI_API_KEY");
-  }
-
-  const openai = new OpenAI({ apiKey });
-
-  console.log("Generating with GPT-image-1...");
-
-  const response = await openai.images.generate({
-    model: "gpt-image-1",
-    prompt,
-    size,
-    n: 1,
-  });
-
-  const imageData = response.data[0].b64_json;
-  if (!imageData) {
-    throw new CLIError("No image data returned from OpenAI API");
-  }
-
-  const imageBuffer = Buffer.from(imageData, "base64");
-  await writeFile(output, imageBuffer);
-  console.log(`Image saved to ${output}`);
-}
+// ============================================================================
+// Image Generation
+// ============================================================================
 
 async function generateWithNanoBananaPro(
   prompt: string,
   size: GeminiSize,
-  aspectRatio: ReplicateSize,
+  aspectRatio: AspectRatio,
   output: string,
   referenceImage?: string
 ): Promise<void> {
@@ -496,39 +411,11 @@ async function generateWithNanoBananaPro(
   // Prepare content parts
   const parts: Array<{ text?: string; inlineData?: { mimeType: string; data: string } }> = [];
 
-  // Add reference image if provided
   if (referenceImage) {
-    // Read image file
-    const imageBuffer = await readFile(referenceImage);
-    const imageBase64 = imageBuffer.toString("base64");
-
-    // Determine MIME type from extension
-    const ext = extname(referenceImage).toLowerCase();
-    let mimeType: string;
-    switch (ext) {
-      case ".png":
-        mimeType = "image/png";
-        break;
-      case ".jpg":
-      case ".jpeg":
-        mimeType = "image/jpeg";
-        break;
-      case ".webp":
-        mimeType = "image/webp";
-        break;
-      default:
-        throw new CLIError(`Unsupported image format: ${ext}. Supported: .png, .jpg, .jpeg, .webp`);
-    }
-
-    parts.push({
-      inlineData: {
-        mimeType,
-        data: imageBase64,
-      },
-    });
+    const ref = await loadReferenceImage(referenceImage);
+    parts.push({ inlineData: ref });
   }
 
-  // Add text prompt
   parts.push({ text: prompt });
 
   const response = await ai.models.generateContent({
@@ -543,33 +430,7 @@ async function generateWithNanoBananaPro(
     },
   });
 
-  // Extract image data from response
-  let imageData: string | undefined;
-
-  if (response.candidates && response.candidates.length > 0) {
-    const candidate = response.candidates[0];
-    if (!candidate.content || !candidate.content.parts) {
-      console.error("Gemini returned candidate without content.");
-      console.error("Finish reason:", candidate.finishReason);
-      if ((response as any).promptFeedback) {
-        console.error("Prompt feedback:", JSON.stringify((response as any).promptFeedback));
-      }
-      throw new CLIError("Gemini blocked or returned empty response. Try simplifying the prompt.");
-    }
-    const parts = candidate.content.parts;
-    for (const part of parts) {
-      // Check if this part contains inline image data
-      if (part.inlineData && part.inlineData.data) {
-        imageData = part.inlineData.data;
-        break;
-      }
-    }
-  }
-
-  if (!imageData) {
-    throw new CLIError("No image data returned from Gemini API");
-  }
-
+  const imageData = extractImageData(response);
   const imageBuffer = Buffer.from(imageData, "base64");
   await writeFile(output, imageBuffer);
   console.log(`Image saved to ${output}`);
@@ -578,7 +439,7 @@ async function generateWithNanoBananaPro(
 async function generateWithNanoBanana2(
   prompt: string,
   size: GeminiSize,
-  aspectRatio: ReplicateSize,
+  aspectRatio: AspectRatio,
   output: string,
   referenceImage?: string,
   thinking?: ThinkingLevel,
@@ -602,37 +463,11 @@ async function generateWithNanoBanana2(
   // Prepare content parts
   const parts: Array<{ text?: string; inlineData?: { mimeType: string; data: string } }> = [];
 
-  // Add reference image if provided
   if (referenceImage) {
-    const imageBuffer = await readFile(referenceImage);
-    const imageBase64 = imageBuffer.toString("base64");
-
-    const ext = extname(referenceImage).toLowerCase();
-    let mimeType: string;
-    switch (ext) {
-      case ".png":
-        mimeType = "image/png";
-        break;
-      case ".jpg":
-      case ".jpeg":
-        mimeType = "image/jpeg";
-        break;
-      case ".webp":
-        mimeType = "image/webp";
-        break;
-      default:
-        throw new CLIError(`Unsupported image format: ${ext}. Supported: .png, .jpg, .jpeg, .webp`);
-    }
-
-    parts.push({
-      inlineData: {
-        mimeType,
-        data: imageBase64,
-      },
-    });
+    const ref = await loadReferenceImage(referenceImage);
+    parts.push({ inlineData: ref });
   }
 
-  // Add text prompt
   parts.push({ text: prompt });
 
   // Build config
@@ -650,24 +485,17 @@ async function generateWithNanoBanana2(
     };
   }
 
-  // Build request options
-  const requestOptions: Record<string, any> = {
+  if (grounded) {
+    config.tools = [{ googleSearch: {} }];
+  }
+
+  const response = await ai.models.generateContent({
     model: "gemini-3.1-flash-image-preview",
     contents: [{ parts }],
     config,
-  };
+  });
 
-  // Add Google Search tool for grounding
-  if (grounded) {
-    requestOptions.config = {
-      ...config,
-      tools: [{ googleSearch: {} }],
-    };
-  }
-
-  const response = await ai.models.generateContent(requestOptions);
-
-  // Extract image data from response
+  // Extract text and image
   let imageData: string | undefined;
   let textResponse: string | undefined;
 
@@ -681,8 +509,7 @@ async function generateWithNanoBanana2(
       }
       throw new CLIError("Gemini blocked or returned empty response. Try simplifying the prompt.");
     }
-    const parts = candidate.content.parts;
-    for (const part of parts) {
+    for (const part of candidate.content.parts) {
       if (part.inlineData && part.inlineData.data) {
         imageData = part.inlineData.data;
       } else if (part.text) {
@@ -721,6 +548,30 @@ async function generateWithNanoBanana2(
 }
 
 // ============================================================================
+// Response Extraction Helper
+// ============================================================================
+
+function extractImageData(response: any): string {
+  if (response.candidates && response.candidates.length > 0) {
+    const candidate = response.candidates[0];
+    if (!candidate.content || !candidate.content.parts) {
+      console.error("Gemini returned candidate without content.");
+      console.error("Finish reason:", candidate.finishReason);
+      if (response.promptFeedback) {
+        console.error("Prompt feedback:", JSON.stringify(response.promptFeedback));
+      }
+      throw new CLIError("Gemini blocked or returned empty response. Try simplifying the prompt.");
+    }
+    for (const part of candidate.content.parts) {
+      if (part.inlineData && part.inlineData.data) {
+        return part.inlineData.data;
+      }
+    }
+  }
+  throw new CLIError("No image data returned from Gemini API");
+}
+
+// ============================================================================
 // Main
 // ============================================================================
 
@@ -753,34 +604,14 @@ async function main(): Promise<void> {
         const varOutput = `${basePath}-v${i}.png`;
         console.log(`Variation ${i}/${args.creativeVariations}: ${varOutput}`);
 
-        if (args.model === "flux") {
-          promises.push(generateWithFlux(finalPrompt, args.size as ReplicateSize, varOutput));
-        } else if (args.model === "nano-banana") {
-          promises.push(generateWithNanoBanana(finalPrompt, args.size as ReplicateSize, varOutput));
-        } else if (args.model === "nano-banana-pro") {
+        if (args.model === "nano-banana-pro") {
           promises.push(
-            generateWithNanoBananaPro(
-              finalPrompt,
-              args.size as GeminiSize,
-              args.aspectRatio!,
-              varOutput,
-              args.referenceImage
-            )
+            generateWithNanoBananaPro(finalPrompt, args.size, args.aspectRatio, varOutput, args.referenceImage)
           );
-        } else if (args.model === "nano-banana-2") {
+        } else {
           promises.push(
-            generateWithNanoBanana2(
-              finalPrompt,
-              args.size as GeminiSize,
-              args.aspectRatio!,
-              varOutput,
-              args.referenceImage,
-              args.thinking,
-              args.grounded
-            )
+            generateWithNanoBanana2(finalPrompt, args.size, args.aspectRatio, varOutput, args.referenceImage, args.thinking, args.grounded)
           );
-        } else if (args.model === "gpt-image-1") {
-          promises.push(generateWithGPTImage(finalPrompt, args.size as OpenAISize, varOutput));
         }
       }
 
@@ -790,30 +621,10 @@ async function main(): Promise<void> {
     }
 
     // Standard single image generation
-    if (args.model === "flux") {
-      await generateWithFlux(finalPrompt, args.size as ReplicateSize, args.output);
-    } else if (args.model === "nano-banana") {
-      await generateWithNanoBanana(finalPrompt, args.size as ReplicateSize, args.output);
-    } else if (args.model === "nano-banana-pro") {
-      await generateWithNanoBananaPro(
-        finalPrompt,
-        args.size as GeminiSize,
-        args.aspectRatio!,
-        args.output,
-        args.referenceImage
-      );
-    } else if (args.model === "nano-banana-2") {
-      await generateWithNanoBanana2(
-        finalPrompt,
-        args.size as GeminiSize,
-        args.aspectRatio!,
-        args.output,
-        args.referenceImage,
-        args.thinking,
-        args.grounded
-      );
-    } else if (args.model === "gpt-image-1") {
-      await generateWithGPTImage(finalPrompt, args.size as OpenAISize, args.output);
+    if (args.model === "nano-banana-pro") {
+      await generateWithNanoBananaPro(finalPrompt, args.size, args.aspectRatio, args.output, args.referenceImage);
+    } else {
+      await generateWithNanoBanana2(finalPrompt, args.size, args.aspectRatio, args.output, args.referenceImage, args.thinking, args.grounded);
     }
 
     // Remove background if requested

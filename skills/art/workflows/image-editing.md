@@ -206,14 +206,14 @@ IMPROVEMENTS:
 
 ---
 
-## Brand Aesthetic Edit Integration
+## Signal Over Noise Edit Integration
 
-When editing images, apply your brand aesthetic:
+When editing images for SoN content, apply brand aesthetic:
 
-### Convert to Brand Style
+### Convert to SoN Style
 
 ```
-Transform this [image type] into your brand aesthetic.
+Transform this [image type] into Signal Over Noise brand aesthetic.
 
 STYLE:
 - Apply hand-drawn Excalidraw sketch quality to lines and edges
@@ -268,5 +268,5 @@ Each turn builds on the previous result. The model maintains context.
 ## See Also
 
 - `nano-banana-guide.md` — Full prompt vocabulary and templates
-- `aesthetic.md` — Default brand styling
+- `aesthetic.md` — Signal Over Noise brand styling
 - `generate-image.ts --help` — CLI options and parameters

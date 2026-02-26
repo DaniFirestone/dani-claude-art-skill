@@ -102,7 +102,7 @@ Communication Goals:
 Constraints:
 - Format: [web/print/social]
 - Aspect ratio: [if specified]
-- Brand requirements: [the default aesthetic]
+- Brand requirements: [Cerebro aesthetic]
 ```
 
 ---
@@ -151,7 +151,7 @@ RATIONALE: [why multiple panels needed]
 #### For Single Mode
 - Read the selected workflow file
 - Follow its mandatory steps completely
-- Apply the default aesthetic throughout
+- Apply Cerebro aesthetic throughout
 
 #### For Hybrid Mode
 - Combine prompts from multiple workflows
@@ -211,7 +211,6 @@ bun run ~/.claude/skills/art/tools/generate-image.ts \
 **Model Selection:**
 - **nano-banana-2** (default) — Best for most tasks, fast iteration, web search grounding
 - **nano-banana-pro** — Maximum reasoning for complex multi-turn compositions
-- **flux** — Maximum photorealism, complex scenes
 
 ---
 

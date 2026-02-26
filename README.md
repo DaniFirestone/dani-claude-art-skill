@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Skill-blue)](https://docs.anthropic.com/en/docs/claude-code)
 
-Complete visual content system for Claude Code — 16 specialized workflows, 4 AI image models, aesthetic routing, and brand customization.
+Complete visual content system for Claude Code — 16 specialized workflows, 2 AI image models (Google Gemini), aesthetic routing, and brand customization.
 
 The default model is **Nano Banana 2** (`gemini-3.1-flash-image-preview`), combining Pro-level quality with Flash speed at ~50% lower cost.
 
@@ -33,20 +33,12 @@ bun install
 Create `~/.claude/.env` with the API keys for the models you want to use:
 
 ```
-# Required for Nano Banana 2 and Nano Banana Pro (recommended)
+# Required for both Nano Banana 2 and Nano Banana Pro
 GOOGLE_API_KEY=your-google-api-key
-
-# Required for Flux model
-REPLICATE_API_TOKEN=your-replicate-token
-
-# Required for GPT-image-1 model
-OPENAI_API_KEY=your-openai-api-key
 
 # Optional — for background removal
 REMOVEBG_API_KEY=your-removebg-key
 ```
-
-You only need the keys for the models you plan to use. Nano Banana 2 (`GOOGLE_API_KEY`) is the default.
 
 ## Usage
 
@@ -66,8 +58,6 @@ The skill automatically routes to the appropriate workflow based on your request
 |-------|----------|-----------|----------|
 | **nano-banana-2** (default) | Google Gemini | ~$0.067 | Fast iteration, most tasks, web search grounding |
 | **nano-banana-pro** | Google Gemini | ~$0.134 | Maximum reasoning, complex multi-turn editing |
-| **gpt-image-1** | OpenAI | varies | Text rendering in images, precise literal interpretation |
-| **flux** | Replicate | varies | Maximum photorealism, complex scenes |
 
 ### Nano Banana 2 Highlights
 
@@ -168,17 +158,17 @@ bun run ~/.claude/skills/art/tools/generate-image.ts \
 ### All CLI options
 
 ```
---model          Model to use (nano-banana-2, nano-banana-pro, gpt-image-1, flux)
+--model          Model: nano-banana-2 (default), nano-banana-pro
 --prompt         Image generation prompt (required)
---size           Output size (512px, 1K, 2K, 4K) — 512px is NB2 only
+--size           Resolution: 512px, 1K, 2K (default), 4K — 512px is NB2 only
 --aspect-ratio   Aspect ratio (1:1, 16:9, 9:16, 4:3, 3:2, 21:9, and NB2 extended)
 --output         Output file path (required)
---reference-image  Reference image for style transfer (Gemini models only)
+--reference-image  Reference image for style transfer
 --thinking       Thinking level: minimal, high (NB2 only)
 --grounded       Enable web search grounding (NB2 only) — accurate logos, landmarks, brands
---transparent    Request transparent background (gpt-image-1 only)
+--transparent    Add transparency instructions to prompt
 --remove-bg      Remove background after generation (requires REMOVEBG_API_KEY)
---creative-variations  Generate 4 creative variations
+--creative-variations  Generate N creative variations
 --help           Show help
 ```
 
