@@ -102,7 +102,7 @@ Communication Goals:
 Constraints:
 - Format: [web/print/social]
 - Aspect ratio: [if specified]
-- Brand requirements: [Cerebro aesthetic]
+- Brand requirements: [default aesthetic]
 ```
 
 ---
@@ -151,7 +151,7 @@ RATIONALE: [why multiple panels needed]
 #### For Single Mode
 - Read the selected workflow file
 - Follow its mandatory steps completely
-- Apply Cerebro aesthetic throughout
+- Apply default aesthetic throughout
 
 #### For Hybrid Mode
 - Combine prompts from multiple workflows

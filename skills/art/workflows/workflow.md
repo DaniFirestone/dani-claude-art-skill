@@ -1,6 +1,6 @@
 # Editorial Illustration Workflow
 
-**Hand-drawn editorial illustrations for blog headers and article visuals using Cerebro aesthetic.**
+**Hand-drawn editorial illustrations for blog headers and article visuals using the default aesthetic.**
 
 Creates **ABSTRACT VISUAL METAPHORS** — not literal depictions, but conceptual illustrations that capture the essence of an idea.
 
@@ -36,7 +36,7 @@ Editorial illustrations communicate complex ideas through visual metaphors. Unli
 
 ### Background
 ```
-Warm Cream      #F7F4EA   (primary - Signal Over Noise brand)
+Warm Cream      #F7F4EA   (primary background)
 Pure White      #FFFFFF   (alternative - maximum clarity)
 ```
 
@@ -236,7 +236,7 @@ open /path/to/output.png
 ```
 1. Extract core concept (single clear idea)
 2. Design composition (2-4 elements, 40-50% space)
-3. Construct prompt with Cerebro aesthetic
+3. Construct prompt with the default aesthetic
 4. Choose aspect ratio for use case
 5. Generate image
 6. Validate hand-drawn quality and conceptual clarity

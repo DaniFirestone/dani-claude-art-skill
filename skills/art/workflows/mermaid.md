@@ -8,7 +8,7 @@ Creates **STRUCTURED TECHNICAL DIAGRAMS** — flowcharts, sequence diagrams, sta
 
 ## Purpose
 
-Mermaid diagrams provide structured visualization for technical concepts. This workflow combines Mermaid's diagram grammar conventions with Excalidraw's hand-drawn aesthetic and Cerebro's warm color palette.
+Mermaid diagrams provide structured visualization for technical concepts. This workflow combines Mermaid's diagram grammar conventions with Excalidraw's hand-drawn aesthetic and a warm color palette.
 
 **Use this workflow for:**
 - Flowcharts with decision logic

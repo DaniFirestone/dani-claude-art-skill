@@ -1,6 +1,6 @@
 ---
 name: art
-description: Complete visual content system for Cerebro. Signal Over Noise aesthetic - light backgrounds, teal/burnt orange accents, hand-drawn sketch style.
+description: Complete visual content system for Claude Code. Default aesthetic - light backgrounds, teal/burnt orange accents, hand-drawn sketch style.
 user-invocable: true
 triggers:
   - USE WHEN user wants to create visual content, illustrations, or diagrams
@@ -42,7 +42,7 @@ The art skill supports multiple visual identities. **Before generating any visua
 1. **Check if the user specifies a brand/project** (e.g., "HotSquatch icon", "SoN newsletter header")
 2. **Check for content-type exceptions** (see Content-Type Override Rules below)
 3. **Check if the target output has a site-specific style guide** (e.g., `HERO-IMAGE-TEMPLATE.md`)
-4. **If no brand specified, use Signal Over Noise as the default**
+4. **If no brand specified, use the default aesthetic**
 
 ### Content-Type Override Rules
 
@@ -50,16 +50,10 @@ The art skill supports multiple visual identities. **Before generating any visua
 
 | Content Type | Detection Pattern | Aesthetic to Use | DO NOT Use |
 |--------------|------------------|------------------|------------|
-| **DeRP Corporate** (the company itself) | Path in `~/Dev/derp-site/`, corporate pages (about, history, leadership, careers, investors, press, contact), OG images, company branding | SCUMM-era LucasArts pixel art — use `hotsquatch.md` aesthetic | jimchristian.net claymorphic, SoN hand-drawn sketch |
-| **DeRP Product Pages** (individual products) | Product page files, product hero images, product-specific content | Match satire target aesthetic (infomercial, tech product, vintage, etc.) — see DeRP Product Standard | The corporate pixel art style — products inherit the genre they're spoofing |
 | **Satirical/Parody Content** | User explicitly says "satire", "parody", "joke product" | Match the satire target's aesthetic (e.g., corporate B2B for business parody) | Host site's aesthetic |
 | **Easter Eggs** | Path contains `easter-eggs/`, explicitly marked as easter egg | Depends on easter egg theme, ask user if unclear | Host site's default |
 
-**Key distinction:** DeRP has a two-tier visual identity. The *company brand* (corporate pages, OG images, team portraits) uses SCUMM-era pixel art. Individual *product pages* each inherit the aesthetic of whatever era/genre they're spoofing (1950s infomercials, sci-fi tech, vintage photography, etc.). This contrast is intentional.
-
 **Rule:** When content-type override detected, DO NOT check host site style guides. The content is intentionally divergent.
-
-**DeRP Products:** For comprehensive guidelines, see `~/Dev/jimchristian-net/DERP-PRODUCT-STANDARD.md` — includes aesthetic reference, workflow selection, layout requirements, and page structure template.
 
 ### Base Prompt Prefix Standard (MANDATORY)
 
@@ -85,10 +79,7 @@ The art skill supports multiple visual identities. **Before generating any visua
 
 | Brand | Aesthetic File | Style |
 |-------|---------------|-------|
-| **Signal Over Noise** (default) | `~/.claude/skills/art/aesthetic.md` | Hand-drawn sketch, cream backgrounds, teal/orange accents |
-| **Second Brain Chronicles** | `~/.claude/skills/art/aesthetics/sbc.md` | Claymorphic DARK, charcoal backgrounds, teal/green accents, isometric dioramas |
-| **HotSquatch! Apps** | `~/.claude/skills/art/aesthetics/hotsquatch.md` | Pixel art, SCUMM-era LucasArts, dark backgrounds, retro palette |
-
+| **Default** | `~/.claude/skills/art/aesthetic.md` | Hand-drawn sketch, cream backgrounds, teal/orange accents |
 **To add a new aesthetic:** Use the `aesthetic-definer` agent. It outputs to `~/.claude/skills/art/aesthetics/[name].md`.
 
 ### Aesthetic Loading Rule
@@ -217,12 +208,7 @@ ls HERO-IMAGE-TEMPLATE.md    # Site-specific image style
 ls STYLE-GUIDE.md            # Design system
 ```
 
-**If found, the site's style guide OVERRIDES the default Signal Over Noise aesthetic.**
-
-**Example: jimchristian.net**
-- Has `HERO-IMAGE-TEMPLATE.md` defining **claymorphic** style
-- Use isometric 3D clay/polymer aesthetic, NOT flat sketches
-- Warm peach backgrounds, pillow-like edges, Blender render look
+**If found, the site's style guide OVERRIDES the default aesthetic.**
 
 **Default aesthetic.md applies when:** No site-specific style guide exists.
 
@@ -247,7 +233,7 @@ Includes:
 - Color palette phrases
 - Aspect ratio selection guide
 - Iterative refinement workflow
-- Signal Over Noise integration template
+- Brand integration template
 
 ---
 
@@ -301,6 +287,6 @@ convert original.png -quality 85 compressed.jpg
 
 **Source:** Personal_AI_Infrastructure Art Skill
 **Assimilated:** 2026-01-04
-**Adapted:** PAI's dark/neon aesthetic → Cerebro's warm/cream aesthetic
+**Adapted:** PAI's dark/neon aesthetic → warm/cream aesthetic
 
 **For complete visual styling rules, ALWAYS read:** `~/.claude/skills/art/aesthetic.md`
