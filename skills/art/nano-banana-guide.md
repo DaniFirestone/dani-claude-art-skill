@@ -1,7 +1,6 @@
 # Nano Banana Prompting Guide
 
-**Extracted from:** The Complete Nano Banana AI Image Editing with Google Gemini (Mammoth Club)
-**For:** Cerebro Art Skill image generation and editing
+**For:** Art Skill image generation and editing
 **Applies to:** Nano Banana 2 (`gemini-3.1-flash-image-preview`) and Nano Banana Pro (`gemini-3-pro-image-preview`)
 
 ---
@@ -259,26 +258,26 @@ Turn 5: "Remove the bottom-left node, it's too cluttered"
 
 ---
 
-## Integration with Signal Over Noise Aesthetic
+## Integration with Brand Aesthetics
 
-When generating images for SoN content, combine these prompt patterns with the brand aesthetic:
+When generating images for a specific brand, combine these prompt patterns with your aesthetic file's Base Prompt Prefix:
 
-### Standard SoN Image Prompt Template
+### Brand Image Prompt Template
 
 ```
-[Action] to create a [content type] in hand-drawn Excalidraw sketch style on warm cream background (#F7F4EA).
+[Action] to create a [content type] in [your aesthetic style].
 
 SUBJECT: [describe 2-4 key elements]
 
-STYLE: Rough, wobbly charcoal sketch lines (#2D2D2D). Imperfect hand-drawn strokes. Multiple overlapping strokes like whiteboard markers.
+STYLE: [your style parameters from aesthetic.md]
 
 ACCENTS:
-- Primary: Deep teal (#1A6B6B) highlights on [focal element]
-- Secondary: Burnt orange (#C85A2A) highlights on [action element]
+- Primary: [your primary accent color] highlights on [focal element]
+- Secondary: [your secondary accent color] highlights on [action element]
 
 MOOD: [Select from vocabulary above]
 
-COMPOSITION: 40-50% negative space, minimal elements, generous breathing room.
+COMPOSITION: [your composition rules from aesthetic.md]
 ```
 
 ---
@@ -332,7 +331,7 @@ Nano Banana 2 has significantly improved text rendering over previous models. It
 - Translated/localized text within images
 
 **Prompting for text:**
-- Spell out the exact text you want in quotes: `with the text "Signal Over Noise" centered at the top`
+- Spell out the exact text you want in quotes: `with the text "Your Brand" centered at the top`
 - Specify font style: "bold sans-serif", "handwritten script", "monospace"
 - Specify placement: "text centered below the icon", "title in the upper third"
 - For multi-language: "translate the heading to Spanish" works in-context
@@ -452,4 +451,4 @@ Prompt tokens are negligible (50-200 tokens per prompt = ~$0.0001). Thinking tok
 
 ## Credits
 
-Content synthesized from *The Complete Nano Banana AI Image Editing with Google Gemini* by Mammoth Club, adapted for Cerebro Art Skill with Signal Over Noise brand integration. Updated 2026-02-26 with Nano Banana 2 launch details from Google developer blog, AI docs, and launch coverage.
+Prompt techniques adapted for the Art Skill. Updated 2026-02-26 with Nano Banana 2 details.
