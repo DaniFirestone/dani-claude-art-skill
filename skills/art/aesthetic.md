@@ -1,6 +1,6 @@
-# Cerebro Visual Aesthetic System
+# Default Aesthetic — Warm Hand-Drawn Sketch
 
-**A warm, approachable aesthetic combining Excalidraw's hand-drawn charm with Signal Over Noise's cream/teal brand palette.**
+**A warm, approachable aesthetic combining Excalidraw's hand-drawn charm with a cream/teal/orange brand palette. Replace this file with your own brand aesthetic.**
 
 ---
 
@@ -16,7 +16,7 @@ Every visualization balances **professional clarity** with **human warmth** — 
 
 ---
 
-## The Signal Over Noise Look
+## The Look
 
 ### What We Want
 - **Excalidraw-style hand-drawn lines** — Sketchy, rough, whiteboard aesthetic
@@ -48,7 +48,7 @@ Every visualization balances **professional clarity** with **human warmth** — 
 
 ### Backgrounds
 ```
-Warm Cream      #F7F4EA   (primary - SoN brand warm)
+Warm Cream      #F7F4EA   (primary warm)
 Pure White      #FFFFFF   (alternative - maximum clarity)
 Light Gray      #F5F5F5   (subtle variation)
 ```
@@ -60,7 +60,7 @@ Dark Gray       #4A4A4A   (secondary sketch lines)
 Medium Gray     #6B6B6B   (tertiary/subtle lines)
 ```
 
-### Accent Colors (Signal Over Noise Brand)
+### Accent Colors
 ```
 Deep Teal       #1A6B6B   (expertise - primary accent)
 Bright Teal     #2B9B9B   (lighter variant)
@@ -77,7 +77,7 @@ Coral Orange    #E07B4F   (softer warmth variant)
 
 ### Color Hierarchy
 1. **CHARCOAL SKETCH LINES are PRIMARY** — hand-drawn, rough, confident
-2. **Deep Teal as MAIN ACCENT** — expertise, trust, Signal Over Noise identity
+2. **Deep Teal as MAIN ACCENT** — expertise, trust, brand identity
 3. **Burnt Orange as WARMTH ACCENT** — energy, approachability, action
 4. **Cream backgrounds** — provide warmth and readability
 5. **Highlights** — subtle, soft shadows only
@@ -123,7 +123,7 @@ The sketchy hand-drawn quality is critical:
 
 ## Visual Metaphors
 
-**How to translate concepts into Signal Over Noise aesthetic:**
+**How to translate concepts into brand aesthetic:**
 
 | Concept Type | Visual Strategy | Style Notes |
 |--------------|-----------------|-------------|
@@ -196,7 +196,7 @@ The sketchy hand-drawn quality is critical:
 ## Background Variations
 
 ### Warm Cream (Default)
-- Signal Over Noise cream (#F7F4EA)
+- Warm Cream (#F7F4EA)
 - Warm, inviting, excellent readability
 - Professional and approachable
 
@@ -264,7 +264,7 @@ The sketchy hand-drawn quality is critical:
 
 ## Base Prompt Prefix (Consistency Lock)
 
-**Every image generation for SoN must be prepended with this base prefix.** This ensures visual consistency across all illustrations in a set. The prefix locks down the parameters that, if varied, break cohesion.
+**Every image generation for this aesthetic must be prepended with this base prefix.** This ensures visual consistency across all illustrations in a set. The prefix locks down the parameters that, if varied, break cohesion.
 
 ```
 Hand-drawn editorial illustration in rough sketch style on warm cream paper background. Medium-weight charcoal ink pen lines with wobbly hand-drawn quality, multiple overlapping strokes like whiteboard markers. Variable line weight — thicker at connections, thinner at ends. Soft warm shadows, not harsh. Illustration fills 60 percent of frame with 40 percent cream background breathing room. Muted color palette: charcoal sketch lines dominate at 70 percent, deep teal accent at 10-15 percent for expertise elements, burnt orange accent at 5-10 percent for warmth and action elements.
@@ -312,7 +312,7 @@ CRITICAL:
 ## Adaptation Note
 
 **Original Source:** Personal_AI_Infrastructure CORE/aesthetic.md
-**Adapted for:** Signal Over Noise brand palette
+**Adapted for:** Warm hand-drawn sketch palette
 **Key Changes:**
 - Dark backgrounds → Warm cream backgrounds
 - Neon orange/cyan → Deep teal/burnt orange
@@ -321,4 +321,4 @@ CRITICAL:
 
 ---
 
-**This is the Cerebro aesthetic: Where Excalidraw meets Signal Over Noise, warm expertise you can trust.**
+**This is the default aesthetic: Where Excalidraw meets warm expertise you can trust.**
