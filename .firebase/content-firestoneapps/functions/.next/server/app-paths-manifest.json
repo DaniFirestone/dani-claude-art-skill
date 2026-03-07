@@ -1,0 +1,13 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/aesthetics/route": "app/api/aesthetics/route.js",
+  "/api/campaign/generate/route": "app/api/campaign/generate/route.js",
+  "/api/campaign/image/route": "app/api/campaign/image/route.js",
+  "/api/generate/route": "app/api/generate/route.js",
+  "/api/workflows/route": "app/api/workflows/route.js",
+  "/(engine)/brands/page": "app/(engine)/brands/page.js",
+  "/(engine)/campaign/new/page": "app/(engine)/campaign/new/page.js",
+  "/(engine)/page": "app/(engine)/page.js",
+  "/(engine)/studio/page": "app/(engine)/studio/page.js",
+  "/(engine)/library/page": "app/(engine)/library/page.js"
+}

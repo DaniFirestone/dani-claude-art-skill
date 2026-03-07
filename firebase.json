@@ -1,5 +1,8 @@
 {
-  "apphosting": {
-    "rootDirectory": "web"
+  "hosting": {
+    "source": "web",
+    "frameworksBackend": {
+      "region": "us-central1"
+    }
   }
 }
