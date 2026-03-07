@@ -1,0 +1,6 @@
+node_modules/
+.next/
+.env.local
+public/generated/*.png
+public/generated/*.jpg
+.DS_Store

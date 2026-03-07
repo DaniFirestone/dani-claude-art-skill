@@ -1,0 +1,10 @@
+runConfig:
+  runtime: nodejs22
+  concurrency: 80
+
+buildConfig:
+  rootDirectory: web
+
+env:
+  - variable: GOOGLE_API_KEY
+    secret: GOOGLE_API_KEY
