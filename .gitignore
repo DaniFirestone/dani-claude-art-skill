@@ -1,7 +1,7 @@
 node_modules/
 .env
 bun.lock
-*.lock
+yarn.lock
 
 # Personal aesthetics (users create their own)
 skills/art/aesthetics/
