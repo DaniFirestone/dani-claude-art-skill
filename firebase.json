@@ -1,7 +1,7 @@
 {
   "apphosting": [
     {
-      "backendId": "web",
+      "backendId": "brandtools",
       "source": ".",
       "ignore": [
         "node_modules",
