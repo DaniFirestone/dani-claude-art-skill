@@ -35,39 +35,39 @@ export default function CampaignSidebar({
   onGenerate,
 }: CampaignSidebarProps) {
   return (
-    <div className="w-[400px] shrink-0 border-r border-black/5 bg-white/50 overflow-y-auto p-6 space-y-6">
+    <div className="w-[400px] shrink-0 border-r border-border bg-card/50 overflow-y-auto p-6 space-y-6">
       <section className="space-y-2">
-        <label className="text-[11px] font-bold uppercase tracking-widest text-sage">Idea</label>
+        <label className="text-[11px] font-bold uppercase tracking-widest text-primary">Idea</label>
         <textarea
           value={idea}
           onChange={(e) => setIdea(e.target.value)}
           placeholder="What's your content idea?"
-          className="w-full h-28 p-3 bg-white border border-black/5 rounded-xl focus:ring-2 focus:ring-sage focus:border-transparent transition-all resize-none text-sm"
+          className="w-full h-28 p-3 bg-card border border-border rounded-xl focus:ring-2 focus:ring-ring focus:border-transparent transition-all resize-none text-sm"
         />
       </section>
 
       <section className="space-y-2">
-        <label className="text-[11px] font-bold uppercase tracking-widest text-sage">Context</label>
+        <label className="text-[11px] font-bold uppercase tracking-widest text-primary">Context</label>
         <textarea
           value={businessContext}
           onChange={(e) => setBusinessContext(e.target.value)}
           placeholder="Business details, audience, brand guidelines (optional)"
-          className="w-full h-20 p-3 bg-white border border-black/5 rounded-xl focus:ring-2 focus:ring-sage focus:border-transparent transition-all resize-none text-sm"
+          className="w-full h-20 p-3 bg-card border border-border rounded-xl focus:ring-2 focus:ring-ring focus:border-transparent transition-all resize-none text-sm"
         />
       </section>
 
       <section className="space-y-2">
-        <label className="text-[11px] font-bold uppercase tracking-widest text-sage">Tone</label>
+        <label className="text-[11px] font-bold uppercase tracking-widest text-primary">Tone</label>
         <ToneSelector value={tone} onChange={setTone} disabled={isGenerating} />
       </section>
 
       <section className="space-y-2">
-        <label className="text-[11px] font-bold uppercase tracking-widest text-sage">Style</label>
+        <label className="text-[11px] font-bold uppercase tracking-widest text-primary">Style</label>
         <AestheticSelector />
       </section>
 
       <section className="space-y-2">
-        <label className="text-[11px] font-bold uppercase tracking-widest text-sage">Quality</label>
+        <label className="text-[11px] font-bold uppercase tracking-widest text-primary">Quality</label>
         <div className="flex gap-2">
           {SIZES.map((s) => (
             <button
@@ -77,8 +77,8 @@ export default function CampaignSidebar({
               className={cn(
                 "flex-1 py-2 rounded-lg border text-xs font-bold transition-all",
                 size === s
-                  ? "bg-charcoal text-white border-charcoal"
-                  : "bg-white border-black/5 hover:bg-black/5"
+                  ? "bg-foreground text-background border-foreground"
+                  : "bg-card border-border hover:bg-muted"
               )}
             >
               {s}
@@ -90,7 +90,7 @@ export default function CampaignSidebar({
       <button
         onClick={onGenerate}
         disabled={isGenerating || !idea.trim()}
-        className="w-full py-3.5 bg-sage text-white rounded-xl font-semibold flex items-center justify-center gap-2.5 hover:bg-sage-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-sage/20"
+        className="w-full py-3.5 bg-primary text-primary-foreground rounded-xl font-semibold flex items-center justify-center gap-2.5 hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-primary/20"
       >
         {isGenerating ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
         {isGenerating ? "Drafting..." : "Generate Campaign"}

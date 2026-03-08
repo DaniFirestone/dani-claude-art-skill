@@ -30,8 +30,8 @@ export default function ToneSelector({
           className={cn(
             "py-2.5 px-3 rounded-xl border text-sm font-medium transition-all disabled:opacity-50",
             value === t.id
-              ? "bg-sage border-sage text-white"
-              : "bg-white border-black/5 hover:border-sage/30"
+              ? "bg-primary border-primary text-primary-foreground"
+              : "bg-card border-border hover:border-primary/30"
           )}
         >
           {t.label}

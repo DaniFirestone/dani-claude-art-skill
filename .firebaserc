@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "content-firestoneapps"
-  }
+    "default": "brandtools-3b50b"
+  },
+  "targets": {},
+  "etags": {}
 }

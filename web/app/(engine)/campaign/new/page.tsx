@@ -155,19 +155,19 @@ export default function CampaignNewPage() {
         onGenerate={handleGenerate}
       />
 
-      <div className="flex-1 overflow-y-auto bg-cream">
+      <div className="flex-1 overflow-y-auto bg-background">
         <div className="max-w-3xl mx-auto px-6 py-8">
           {!hasPlatforms && !isGenerating && (
-            <div className="min-h-[500px] flex flex-col items-center justify-center text-center border-2 border-dashed border-black/5 rounded-3xl">
-              <Sparkles className="w-8 h-8 text-sage/20 mb-3" />
-              <p className="text-sm text-charcoal/40">Enter an idea to generate your campaign</p>
+            <div className="min-h-[500px] flex flex-col items-center justify-center text-center border-2 border-dashed border-border rounded-3xl">
+              <Sparkles className="w-8 h-8 text-primary/20 mb-3" />
+              <p className="text-sm text-muted-foreground">Enter an idea to generate your campaign</p>
             </div>
           )}
 
           {isGenerating && !hasPlatforms && (
             <div className="space-y-8 animate-pulse">
               {[1, 2].map((i) => (
-                <div key={i} className="bg-white rounded-[32px] p-8 h-96 border border-black/5" />
+                <div key={i} className="bg-card rounded-[32px] p-8 h-96 border border-border" />
               ))}
             </div>
           )}

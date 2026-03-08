@@ -23,14 +23,14 @@ export default function GenerationHistory() {
   }
 
   return (
-    <div className="border-t border-cream-dark pt-4">
+    <div className="border-t border-border pt-4">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-xs font-semibold uppercase tracking-widest text-charcoal-soft">
+        <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
           Your recent work
         </h3>
         <button
           onClick={clearHistory}
-          className="text-xs text-charcoal-soft hover:text-red-400 transition-colors"
+          className="text-xs text-muted-foreground hover:text-destructive transition-colors"
         >
           Clear all
         </button>
@@ -41,7 +41,7 @@ export default function GenerationHistory() {
             key={entry.id}
             onClick={() => handleRestore(entry)}
             title={entry.prompt}
-            className="shrink-0 w-20 h-14 rounded-lg overflow-hidden border border-cream-dark hover:border-sage transition-colors group relative bg-cream"
+            className="shrink-0 w-20 h-14 rounded-lg overflow-hidden border border-border hover:border-primary transition-colors group relative bg-muted"
           >
             <Image
               src={entry.imageUrl}

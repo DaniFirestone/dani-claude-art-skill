@@ -89,22 +89,22 @@ export default function StudioPage() {
 
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <header className="px-6 py-3 border-b border-cream-dark bg-cream/80 backdrop-blur flex items-center justify-between shrink-0">
+        <header className="px-6 py-3 border-b border-border bg-background/80 backdrop-blur flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
-            <h1 className="text-sm font-semibold text-charcoal tracking-tight">
+            <h1 className="text-sm font-headline font-semibold text-foreground tracking-tight">
               Asset Studio
             </h1>
             {selectedWorkflow && (
               <>
-                <span className="text-charcoal-soft/40 text-xs">&middot;</span>
-                <span className="text-sm text-sage font-medium">{selectedWorkflow.label}</span>
+                <span className="text-muted-foreground/40 text-xs">&middot;</span>
+                <span className="text-sm text-primary font-medium">{selectedWorkflow.label}</span>
               </>
             )}
           </div>
-          <div className="text-xs text-charcoal-soft">
+          <div className="text-xs text-muted-foreground">
             {isGenerating ? (
-              <span className="inline-flex items-center gap-1.5 text-sage">
-                <span className="inline-block w-2 h-2 bg-sage rounded-full animate-pulse" />
+              <span className="inline-flex items-center gap-1.5 text-accent">
+                <span className="inline-block w-2 h-2 bg-accent rounded-full animate-pulse" />
                 Working on it...
               </span>
             ) : null}
@@ -115,7 +115,7 @@ export default function StudioPage() {
         <div className="flex-1 overflow-y-auto">
           <div className="max-w-3xl mx-auto px-6 py-5 space-y-6">
             <AestheticSelector />
-            <hr className="border-cream-dark" />
+            <div className="h-px bg-border" />
             <GeneratorForm onGenerate={handleGenerate} />
             <ImageViewer />
             <GenerationHistory />

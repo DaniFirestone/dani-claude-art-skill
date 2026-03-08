@@ -80,6 +80,9 @@ The art skill supports multiple visual identities. **Before generating any visua
 | Brand | Aesthetic File | Style |
 |-------|---------------|-------|
 | **Default** | `~/.claude/skills/art/aesthetic.md` | Hand-drawn sketch, cream backgrounds, teal/orange accents |
+| **Content Hub** | `~/.claude/skills/art/aesthetics/content-hub.md` | Risograph editorial, indigo/teal/coral on textured paper |
+| **Content Hub (Technical)** | `~/.claude/skills/art/aesthetics/content-hub-blueprint.md` | Blueprint drafting, white lines on deep indigo, teal/amber annotations |
+
 **To add a new aesthetic:** Use the `aesthetic-definer` agent. It outputs to `~/.claude/skills/art/aesthetics/[name].md`.
 
 ### Aesthetic Loading Rule

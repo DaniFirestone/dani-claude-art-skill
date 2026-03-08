@@ -35,23 +35,23 @@ export default function AestheticSelector() {
   }
 
   if (loading) {
-    return <div className="text-sm text-charcoal-soft animate-pulse">Loading styles…</div>;
+    return <div className="text-sm text-muted-foreground animate-pulse">Loading styles…</div>;
   }
 
   if (aesthetics.length === 0) {
-    return <div className="text-sm text-red-600">No style files found in skills/art/</div>;
+    return <div className="text-sm text-destructive">No style files found in skills/art/</div>;
   }
 
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-3">
-        <label className="text-xs font-semibold uppercase tracking-wide text-charcoal-soft shrink-0">
+        <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground shrink-0">
           Visual style
         </label>
         <select
           value={selectedAestheticId}
           onChange={(e) => handleChange(e.target.value)}
-          className="flex-1 text-sm border border-cream-dark rounded-lg px-2 py-1.5 bg-white text-charcoal focus:outline-none focus:ring-2 focus:ring-sage/40"
+          className="flex-1 text-sm border border-border rounded-lg px-2 py-1.5 bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-ring/40"
         >
           {aesthetics.map((a) => (
             <option key={a.id} value={a.id}>
@@ -60,7 +60,7 @@ export default function AestheticSelector() {
           ))}
         </select>
         {selectedAesthetic?.description && (
-          <span className="text-xs text-charcoal-soft italic truncate max-w-48">
+          <span className="text-xs text-muted-foreground italic truncate max-w-48">
             &ldquo;{selectedAesthetic.description}&rdquo;
           </span>
         )}
@@ -71,13 +71,13 @@ export default function AestheticSelector() {
           <button
             type="button"
             onClick={() => setStyleOpen((o) => !o)}
-            className="text-xs text-charcoal-soft hover:text-sage flex items-center gap-1 transition-colors"
+            className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1 transition-colors"
           >
             <span>{styleOpen ? "▾" : "▸"}</span>
             <span>Style description {styleOpen ? "— will guide the visual look" : "(preview)"}</span>
           </button>
           {styleOpen && (
-            <pre className="mt-1.5 text-xs text-charcoal-light bg-cream rounded-lg p-3 overflow-x-auto leading-relaxed whitespace-pre-wrap border border-cream-dark">
+            <pre className="mt-1.5 text-xs text-muted-foreground bg-muted rounded-lg p-3 overflow-x-auto leading-relaxed whitespace-pre-wrap border border-border">
               {selectedAesthetic.prefix}
             </pre>
           )}

@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useArtStudioStore } from "@/lib/store";
+import { getImageAcceptingTools } from "@/lib/tools/registry";
 
 export default function ImageViewer() {
   const { generationResult, isGenerating } = useArtStudioStore();
@@ -10,12 +12,14 @@ export default function ImageViewer() {
   const [promptCopied, setPromptCopied] = useState(false);
   const [groundingOpen, setGroundingOpen] = useState(false);
   const [textOpen, setTextOpen] = useState(false);
+  const [openInMenu, setOpenInMenu] = useState<number | null>(null);
+  const router = useRouter();
 
   if (isGenerating) {
     return (
-      <div className="flex items-center justify-center min-h-48 bg-cream rounded-lg border border-cream-dark">
-        <div className="text-center text-charcoal-soft space-y-2">
-          <div className="inline-block w-8 h-8 border-2 border-sage/30 border-t-sage rounded-full animate-spin" />
+      <div className="flex items-center justify-center min-h-48 bg-muted rounded-lg border border-border">
+        <div className="text-center text-muted-foreground space-y-2">
+          <div className="inline-block w-8 h-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
           <p className="text-sm">Generating image…</p>
         </div>
       </div>
@@ -24,8 +28,8 @@ export default function ImageViewer() {
 
   if (!generationResult) {
     return (
-      <div className="flex items-center justify-center min-h-48 bg-cream rounded-lg border border-cream-dark border-dashed">
-        <p className="text-sm text-charcoal-soft">Generated image will appear here</p>
+      <div className="flex items-center justify-center min-h-48 bg-muted rounded-lg border border-border border-dashed">
+        <p className="text-sm text-muted-foreground">Generated image will appear here</p>
       </div>
     );
   }
@@ -55,7 +59,7 @@ export default function ImageViewer() {
         {imageUrls.map((url, i) => (
           <div key={url} className="relative group">
             <div
-              className="relative rounded-lg overflow-hidden bg-cream cursor-zoom-in border border-cream-dark"
+              className="relative rounded-lg overflow-hidden bg-muted cursor-zoom-in border border-border"
               onClick={() => setExpandedIndex(expandedIndex === i ? null : i)}
             >
               <Image
@@ -67,12 +71,39 @@ export default function ImageViewer() {
                 unoptimized
               />
             </div>
-            <button
-              onClick={() => handleDownload(url, i)}
-              className="mt-1.5 text-xs text-sage hover:text-sage-hover flex items-center gap-1 transition-colors"
-            >
-              ↓ Download{isGrid ? ` v${i + 1}` : ""}
-            </button>
+            <div className="mt-1.5 flex items-center gap-3">
+              <button
+                onClick={() => handleDownload(url, i)}
+                className="text-xs text-accent hover:text-accent/80 flex items-center gap-1 transition-colors"
+              >
+                ↓ Download{isGrid ? ` v${i + 1}` : ""}
+              </button>
+              <div className="relative">
+                <button
+                  onClick={() => setOpenInMenu(openInMenu === i ? null : i)}
+                  className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Open in…
+                </button>
+                {openInMenu === i && (
+                  <div className="absolute left-0 top-full mt-1 bg-card border border-border rounded-lg shadow-lg py-1 z-20 min-w-[160px]">
+                    {getImageAcceptingTools().map((tool) => (
+                      <button
+                        key={tool.id}
+                        className="w-full text-left px-3 py-1.5 text-xs hover:bg-accent transition-colors"
+                        onClick={() => {
+                          sessionStorage.setItem(`tool-input-${tool.id}`, url);
+                          setOpenInMenu(null);
+                          router.push(`/toolkit/${tool.id}`);
+                        }}
+                      >
+                        {tool.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         ))}
       </div>
@@ -106,7 +137,7 @@ export default function ImageViewer() {
       <div className="flex flex-wrap items-center gap-3 text-xs">
         <button
           onClick={handleCopyPrompt}
-          className="text-sage hover:text-sage-hover transition-colors"
+          className="text-accent hover:text-accent/80 transition-colors"
         >
           {promptCopied ? "✓ Copied!" : "Copy prompt"}
         </button>
@@ -114,7 +145,7 @@ export default function ImageViewer() {
         {groundingSources && groundingSources.length > 0 && (
           <button
             onClick={() => setGroundingOpen((o) => !o)}
-            className="text-charcoal-soft hover:text-charcoal transition-colors"
+            className="text-muted-foreground hover:text-foreground transition-colors"
           >
             {groundingOpen ? "▾" : "▸"} {groundingSources.length} grounding source{groundingSources.length !== 1 ? "s" : ""}
           </button>
@@ -123,7 +154,7 @@ export default function ImageViewer() {
         {textResponse && (
           <button
             onClick={() => setTextOpen((o) => !o)}
-            className="text-charcoal-soft hover:text-charcoal transition-colors"
+            className="text-muted-foreground hover:text-foreground transition-colors"
           >
             {textOpen ? "▾" : "▸"} Model note
           </button>
@@ -131,10 +162,10 @@ export default function ImageViewer() {
       </div>
 
       {groundingOpen && groundingSources && (
-        <ul className="text-xs space-y-1 text-charcoal-soft bg-cream rounded p-3 border border-cream-dark">
+        <ul className="text-xs space-y-1 text-muted-foreground bg-muted rounded p-3 border border-border">
           {groundingSources.map((s) => (
             <li key={s.uri}>
-              <a href={s.uri} target="_blank" rel="noopener noreferrer" className="text-sage hover:underline">
+              <a href={s.uri} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
                 {s.title || s.uri}
               </a>
             </li>
@@ -143,7 +174,7 @@ export default function ImageViewer() {
       )}
 
       {textOpen && textResponse && (
-        <p className="text-xs text-charcoal-soft bg-cream rounded p-3 border border-cream-dark leading-relaxed">
+        <p className="text-xs text-muted-foreground bg-muted rounded p-3 border border-border leading-relaxed">
           {textResponse}
         </p>
       )}

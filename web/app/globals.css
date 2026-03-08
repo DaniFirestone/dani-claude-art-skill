@@ -1,23 +1,116 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=EB+Garamond:wght@400;500;600;700&display=swap');
+
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: hsl(var(--background) / <alpha-value>);
+  --color-foreground: hsl(var(--foreground) / <alpha-value>);
+  --color-card: hsl(var(--card) / <alpha-value>);
+  --color-card-foreground: hsl(var(--card-foreground) / <alpha-value>);
+  --color-primary: hsl(var(--primary) / <alpha-value>);
+  --color-primary-foreground: hsl(var(--primary-foreground) / <alpha-value>);
+  --color-secondary: hsl(var(--secondary) / <alpha-value>);
+  --color-secondary-foreground: hsl(var(--secondary-foreground) / <alpha-value>);
+  --color-muted: hsl(var(--muted) / <alpha-value>);
+  --color-muted-foreground: hsl(var(--muted-foreground) / <alpha-value>);
+  --color-accent: hsl(var(--accent) / <alpha-value>);
+  --color-accent-foreground: hsl(var(--accent-foreground) / <alpha-value>);
+  --color-destructive: hsl(var(--destructive) / <alpha-value>);
+  --color-destructive-foreground: hsl(var(--destructive-foreground) / <alpha-value>);
+  --color-border: hsl(var(--border) / <alpha-value>);
+  --color-input: hsl(var(--input) / <alpha-value>);
+  --color-ring: hsl(var(--ring) / <alpha-value>);
+  --color-sidebar: hsl(var(--sidebar-background) / <alpha-value>);
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground) / <alpha-value>);
+  --color-sidebar-accent: hsl(var(--sidebar-accent) / <alpha-value>);
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground) / <alpha-value>);
+  --color-sidebar-border: hsl(var(--sidebar-border) / <alpha-value>);
+
+  --color-platform-linkedin: #0A66C2;
+  --color-platform-threads: #000000;
+  --color-platform-instagram: #E1306C;
+  --color-platform-pinterest: #E60023;
+
+  --font-headline: 'EB Garamond', Georgia, serif;
+  --font-body: 'Lato', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-code: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-sans: 'Lato', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --radius: 0.5rem;
+}
 
 :root {
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --background: 220 17% 95%;
+  --foreground: 220 15% 20%;
+  --card: 0 0% 100%;
+  --card-foreground: 220 15% 20%;
+  --primary: 231 48% 48%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 220 10% 90%;
+  --secondary-foreground: 220 15% 20%;
+  --muted: 220 10% 85%;
+  --muted-foreground: 220 10% 45%;
+  --accent: 174 100% 29%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 220 10% 80%;
+  --input: 220 10% 88%;
+  --ring: 231 48% 48%;
+  --sidebar-background: 220 20% 98%;
+  --sidebar-foreground: 220 15% 20%;
+  --sidebar-accent: 231 45% 93%;
+  --sidebar-accent-foreground: 231 48% 48%;
+  --sidebar-border: 220 10% 80%;
 }
 
-* {
-  box-sizing: border-box;
+.dark {
+  --background: 220 15% 10%;
+  --foreground: 220 15% 90%;
+  --card: 220 15% 15%;
+  --card-foreground: 220 15% 90%;
+  --primary: 231 48% 58%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 220 15% 20%;
+  --secondary-foreground: 220 15% 90%;
+  --muted: 220 15% 25%;
+  --muted-foreground: 220 15% 60%;
+  --accent: 174 100% 39%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 50.6%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 220 15% 25%;
+  --input: 220 15% 20%;
+  --ring: 231 48% 58%;
+  --sidebar-background: 220 15% 16%;
+  --sidebar-foreground: 220 15% 90%;
+  --sidebar-accent: 220 15% 22%;
+  --sidebar-accent-foreground: 220 15% 90%;
+  --sidebar-border: 220 15% 25%;
 }
 
-body {
-  margin: 0;
-  background-color: #F5F5F0;
-  color: #1A1A1A;
-  font-family: var(--font-sans);
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
 }
 
-/* Scrollbar styling */
+@layer utilities {
+  .elevation-1 { box-shadow: 0 1px 3px rgb(0 0 0 / 0.1); }
+  .elevation-2 { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+  .elevation-3 { box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1); }
+  .elevation-4 { box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
+  .transition-fast { transition: all 150ms ease-out; }
+  .transition-base { transition: all 200ms ease-out; }
+  .transition-slow { transition: all 300ms ease-out; }
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -26,9 +119,9 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #4A4A4A40;
+  background: hsl(var(--muted-foreground) / 0.25);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #4A4A4A80;
+  background: hsl(var(--muted-foreground) / 0.5);
 }

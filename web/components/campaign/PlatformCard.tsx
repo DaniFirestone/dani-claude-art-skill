@@ -60,60 +60,60 @@ export default function PlatformCard({
   }
 
   return (
-    <div className="bg-white rounded-3xl border border-black/5 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+    <div className="bg-card rounded-3xl border border-border overflow-hidden shadow-sm hover:shadow-md transition-shadow">
       <div className="p-6 flex flex-col md:grid md:grid-cols-[1fr_260px] gap-6">
         {/* Text */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-lg bg-cream flex items-center justify-center text-sage">
+              <div className="w-9 h-9 rounded-lg bg-muted flex items-center justify-center text-primary">
                 {ICONS[platformId]}
               </div>
-              <h3 className="font-bold">{label}</h3>
+              <h3 className="font-headline font-bold">{label}</h3>
             </div>
-            <button onClick={handleCopy} className="p-1.5 hover:bg-black/5 rounded-lg transition-colors text-sage">
-              {copied ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
+            <button onClick={handleCopy} className="p-1.5 hover:bg-muted rounded-lg transition-colors text-primary">
+              {copied ? <Check className="w-4 h-4 text-accent" /> : <Copy className="w-4 h-4" />}
             </button>
           </div>
 
-          <div className="text-sm text-charcoal/70 leading-relaxed whitespace-pre-wrap">{text}</div>
+          <div className="text-sm text-foreground/70 leading-relaxed whitespace-pre-wrap">{text}</div>
 
           <button
             type="button"
             onClick={() => setPromptVisible((o) => !o)}
-            className="text-[10px] uppercase tracking-widest font-bold text-sage/40 hover:text-sage/60 transition-colors"
+            className="text-[10px] uppercase tracking-widest font-bold text-primary/40 hover:text-primary/60 transition-colors"
           >
             {promptVisible ? "Hide" : "Show"} prompt
           </button>
-          {promptVisible && <p className="text-xs italic text-sage/50">{imagePrompt}</p>}
+          {promptVisible && <p className="text-xs italic text-primary/50">{imagePrompt}</p>}
         </div>
 
         {/* Image */}
         <div>
           <div
             className={cn(
-              "relative rounded-2xl overflow-hidden bg-cream border border-black/5 flex items-center justify-center",
+              "relative rounded-2xl overflow-hidden bg-muted border border-border flex items-center justify-center",
               ASPECT_CLASSES[aspectRatio] || "aspect-square"
             )}
           >
             {imageStatus === "generating" ? (
-              <Loader2 className="w-6 h-6 animate-spin text-sage/30" />
+              <Loader2 className="w-6 h-6 animate-spin text-primary/30" />
             ) : imageUrl ? (
               <Image src={imageUrl} alt={`${label} visual`} fill className="object-cover" unoptimized />
             ) : (
-              <ImageIcon className="w-8 h-8 text-sage/10" />
+              <ImageIcon className="w-8 h-8 text-primary/10" />
             )}
 
             {imageUrl && imageStatus === "done" && (
               <button
                 onClick={onRegenerateImage}
-                className="absolute bottom-2 right-2 p-1.5 bg-white/90 backdrop-blur shadow-sm rounded-full hover:bg-white transition-colors"
+                className="absolute bottom-2 right-2 p-1.5 bg-card/90 backdrop-blur shadow-sm rounded-full hover:bg-card transition-colors"
               >
-                <RefreshCw className="w-3.5 h-3.5 text-sage" />
+                <RefreshCw className="w-3.5 h-3.5 text-primary" />
               </button>
             )}
           </div>
-          <span className="text-[10px] font-bold uppercase tracking-widest text-sage/40 mt-2 block">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-primary/40 mt-2 block">
             {aspectRatio}
           </span>
         </div>

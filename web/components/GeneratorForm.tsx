@@ -134,7 +134,7 @@ export default function GeneratorForm({ onGenerate }: { onGenerate: () => void }
       {/* Sub-type selector — shown only when the selected workflow has typeOptions */}
       {selectedWorkflow?.typeOptions && (
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-charcoal-soft mb-2">Type</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">Type</p>
           <div className="flex flex-wrap gap-1.5">
             {selectedWorkflow.typeOptions.map((opt) => {
               const isActive = selectedWorkflowType === opt.label;
@@ -146,8 +146,8 @@ export default function GeneratorForm({ onGenerate }: { onGenerate: () => void }
                   disabled={isGenerating}
                   className={`px-3 py-1 rounded-full text-xs font-medium transition-colors border disabled:opacity-50 ${
                     isActive
-                      ? "bg-sage text-white border-sage"
-                      : "bg-white text-charcoal border-cream-dark hover:border-sage/40 hover:text-sage"
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-card text-foreground border-border hover:border-primary/40 hover:text-primary"
                   }`}
                 >
                   {opt.label}
@@ -160,7 +160,7 @@ export default function GeneratorForm({ onGenerate }: { onGenerate: () => void }
 
       {/* Prompt */}
       <div>
-        <label className="block text-sm font-medium text-charcoal mb-1.5">
+        <label className="block text-sm font-medium text-foreground mb-1.5">
           Describe your idea
         </label>
         <textarea
@@ -169,10 +169,10 @@ export default function GeneratorForm({ onGenerate }: { onGenerate: () => void }
           onChange={(e) => setFormValues({ prompt: e.target.value })}
           placeholder={placeholder}
           disabled={isGenerating}
-          className="w-full text-sm border border-cream-dark rounded-lg px-3 py-2.5 bg-white text-charcoal placeholder:text-charcoal-soft/50 focus:outline-none focus:ring-2 focus:ring-sage/40 resize-none disabled:opacity-50 leading-relaxed"
+          className="w-full text-sm border border-border rounded-lg px-3 py-2.5 bg-card text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring/40 resize-none disabled:opacity-50 leading-relaxed"
         />
         {aestheticPrefix && (
-          <p className="text-xs text-sage/70 mt-1 flex items-center gap-1">
+          <p className="text-xs text-accent/70 mt-1 flex items-center gap-1">
             <span>✦</span> Visual style will be applied automatically
           </p>
         )}
@@ -180,25 +180,25 @@ export default function GeneratorForm({ onGenerate }: { onGenerate: () => void }
 
       {/* Contextual hint for this workflow */}
       {selectedWorkflow?.contextualHint && (
-        <div className="flex gap-2 text-xs text-charcoal-soft bg-cream rounded-lg px-3 py-2 border border-cream-dark">
-          <span className="text-sage shrink-0 mt-px">↳</span>
+        <div className="flex gap-2 text-xs text-muted-foreground bg-muted rounded-lg px-3 py-2 border border-border">
+          <span className="text-accent shrink-0 mt-px">↳</span>
           <span>{selectedWorkflow.contextualHint}</span>
         </div>
       )}
 
       {/* Image-first upload — shown prominently for annotated screenshots and image editing */}
       {isImageFirst && (
-        <div className={`rounded-lg border-2 p-3 ${formValues.referenceImageName ? "border-sage/40 bg-sage/5" : "border-dashed border-cream-dark bg-cream"}`}>
-          <p className="text-xs font-semibold uppercase tracking-wide text-charcoal-soft mb-2">
+        <div className={`rounded-lg border-2 p-3 ${formValues.referenceImageName ? "border-primary/40 bg-primary/5" : "border-dashed border-border bg-muted"}`}>
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
             Source image {formValues.referenceImageName ? "✓" : "— required"}
           </p>
           {formValues.referenceImageName ? (
-            <div className="flex items-center gap-2 text-sm text-charcoal">
+            <div className="flex items-center gap-2 text-sm text-foreground">
               <span className="truncate">📎 {formValues.referenceImageName}</span>
               <button
                 type="button"
                 onClick={clearReferenceImage}
-                className="text-xs text-charcoal-soft hover:text-red-500 shrink-0 transition-colors ml-auto"
+                className="text-xs text-muted-foreground hover:text-destructive shrink-0 transition-colors ml-auto"
               >
                 Clear
               </button>
@@ -210,7 +210,7 @@ export default function GeneratorForm({ onGenerate }: { onGenerate: () => void }
               accept="image/png,image/jpeg,image/webp"
               onChange={handleFileChange}
               disabled={isGenerating}
-              className="text-sm text-charcoal file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:text-sm file:font-medium file:bg-white file:text-charcoal hover:file:bg-cream-dark disabled:opacity-50 cursor-pointer"
+              className="text-sm text-foreground file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:text-sm file:font-medium file:bg-card file:text-foreground hover:file:bg-muted disabled:opacity-50 cursor-pointer"
             />
           )}
         </div>
@@ -219,24 +219,24 @@ export default function GeneratorForm({ onGenerate }: { onGenerate: () => void }
       {/* Quality + Resolution + Shape */}
       <div className="grid grid-cols-3 gap-3">
         <div>
-          <label className="block text-xs font-medium text-charcoal-soft mb-1 uppercase tracking-wide">Quality</label>
+          <label className="block text-xs font-medium text-muted-foreground mb-1 uppercase tracking-wide">Quality</label>
           <select
             value={formValues.model}
             onChange={(e) => setFormValues({ model: e.target.value as typeof formValues.model })}
             disabled={isGenerating}
-            className="w-full text-sm border border-cream-dark rounded-lg px-2 py-1.5 bg-white text-charcoal focus:outline-none focus:ring-2 focus:ring-sage/40 disabled:opacity-50"
+            className="w-full text-sm border border-border rounded-lg px-2 py-1.5 bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-ring/40 disabled:opacity-50"
           >
             <option value="nano-banana-2">Fast · great quality</option>
             <option value="nano-banana-pro">Best quality · slower</option>
           </select>
         </div>
         <div>
-          <label className="block text-xs font-medium text-charcoal-soft mb-1 uppercase tracking-wide">Resolution</label>
+          <label className="block text-xs font-medium text-muted-foreground mb-1 uppercase tracking-wide">Resolution</label>
           <select
             value={formValues.size}
             onChange={(e) => setFormValues({ size: e.target.value as GeminiSize })}
             disabled={isGenerating}
-            className="w-full text-sm border border-cream-dark rounded-lg px-2 py-1.5 bg-white text-charcoal focus:outline-none focus:ring-2 focus:ring-sage/40 disabled:opacity-50"
+            className="w-full text-sm border border-border rounded-lg px-2 py-1.5 bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-ring/40 disabled:opacity-50"
           >
             {sizes.map((s) => (
               <option key={s} value={s}>{SIZE_LABELS[s]}</option>
@@ -244,12 +244,12 @@ export default function GeneratorForm({ onGenerate }: { onGenerate: () => void }
           </select>
         </div>
         <div>
-          <label className="block text-xs font-medium text-charcoal-soft mb-1 uppercase tracking-wide">Shape</label>
+          <label className="block text-xs font-medium text-muted-foreground mb-1 uppercase tracking-wide">Shape</label>
           <select
             value={formValues.aspectRatio}
             onChange={(e) => setFormValues({ aspectRatio: e.target.value as AspectRatio })}
             disabled={isGenerating}
-            className="w-full text-sm border border-cream-dark rounded-lg px-2 py-1.5 bg-white text-charcoal focus:outline-none focus:ring-2 focus:ring-sage/40 disabled:opacity-50"
+            className="w-full text-sm border border-border rounded-lg px-2 py-1.5 bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-ring/40 disabled:opacity-50"
           >
             {aspectRatios.map((r) => (
               <option key={r} value={r}>{RATIO_LABELS[r] ?? r}</option>
@@ -261,12 +261,12 @@ export default function GeneratorForm({ onGenerate }: { onGenerate: () => void }
       {/* Versions + No background */}
       <div className="flex items-center gap-6 flex-wrap">
         <div className="flex items-center gap-2">
-          <label className="text-sm text-charcoal shrink-0">Versions</label>
+          <label className="text-sm text-foreground shrink-0">Versions</label>
           <select
             value={formValues.variations}
             onChange={(e) => setFormValues({ variations: Number(e.target.value) })}
             disabled={isGenerating}
-            className="text-sm border border-cream-dark rounded-lg px-2 py-1 bg-white text-charcoal focus:outline-none focus:ring-2 focus:ring-sage/40 disabled:opacity-50"
+            className="text-sm border border-border rounded-lg px-2 py-1 bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-ring/40 disabled:opacity-50"
           >
             <option value={1}>1</option>
             <option value={2}>2 — compare</option>
@@ -274,13 +274,13 @@ export default function GeneratorForm({ onGenerate }: { onGenerate: () => void }
             <option value={4}>4 — max</option>
           </select>
         </div>
-        <label className="flex items-center gap-2 text-sm text-charcoal cursor-pointer select-none">
+        <label className="flex items-center gap-2 text-sm text-foreground cursor-pointer select-none">
           <input
             type="checkbox"
             checked={formValues.transparent}
             onChange={(e) => setFormValues({ transparent: e.target.checked })}
             disabled={isGenerating}
-            className="accent-sage"
+            className="accent-primary"
           />
           No background (PNG)
         </label>
@@ -291,30 +291,30 @@ export default function GeneratorForm({ onGenerate }: { onGenerate: () => void }
         <button
           type="button"
           onClick={() => setAdvancedOpen((o) => !o)}
-          className="text-xs text-charcoal-soft hover:text-charcoal flex items-center gap-1.5 transition-colors"
+          className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1.5 transition-colors"
         >
           <span style={{ display: "inline-block", transform: advancedOpen ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 150ms" }}>
             ▶
           </span>
           Advanced options
-          {hasAdvancedActive && <span className="text-sage ml-1">·</span>}
+          {hasAdvancedActive && <span className="text-primary ml-1">·</span>}
         </button>
 
         {advancedOpen && (
-          <div className="mt-3 space-y-3 pl-4 border-l-2 border-cream-dark">
+          <div className="mt-3 space-y-3 pl-4 border-l-2 border-border">
             {/* Reference image — only in Advanced for non-image-first workflows */}
             {!isImageFirst && (
               <div>
-                <label className="block text-xs font-medium text-charcoal-soft mb-1 uppercase tracking-wide">
+                <label className="block text-xs font-medium text-muted-foreground mb-1 uppercase tracking-wide">
                   Start from an image
                 </label>
                 {formValues.referenceImageName ? (
-                  <div className="flex items-center gap-2 text-sm text-charcoal">
+                  <div className="flex items-center gap-2 text-sm text-foreground">
                     <span className="truncate max-w-xs">📎 {formValues.referenceImageName}</span>
                     <button
                       type="button"
                       onClick={clearReferenceImage}
-                      className="text-xs text-charcoal-soft hover:text-red-500 shrink-0 transition-colors"
+                      className="text-xs text-muted-foreground hover:text-destructive shrink-0 transition-colors"
                     >
                       Clear
                     </button>
@@ -326,7 +326,7 @@ export default function GeneratorForm({ onGenerate }: { onGenerate: () => void }
                     accept="image/png,image/jpeg,image/webp"
                     onChange={handleFileChange}
                     disabled={isGenerating}
-                    className="text-sm text-charcoal file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:text-sm file:font-medium file:bg-cream file:text-charcoal hover:file:bg-cream-dark disabled:opacity-50 cursor-pointer"
+                    className="text-sm text-foreground file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:text-sm file:font-medium file:bg-muted file:text-foreground hover:file:bg-muted/80 disabled:opacity-50 cursor-pointer"
                   />
                 )}
               </div>
@@ -335,26 +335,26 @@ export default function GeneratorForm({ onGenerate }: { onGenerate: () => void }
             {isNB2 && (
               <div className="space-y-2">
                 <div>
-                  <label className="block text-xs font-medium text-charcoal-soft mb-1 uppercase tracking-wide">
+                  <label className="block text-xs font-medium text-muted-foreground mb-1 uppercase tracking-wide">
                     Reasoning depth
                   </label>
                   <select
                     value={formValues.thinking}
                     onChange={(e) => setFormValues({ thinking: e.target.value as typeof formValues.thinking })}
                     disabled={isGenerating}
-                    className="text-sm border border-cream-dark rounded-lg px-2 py-1.5 bg-white text-charcoal focus:outline-none focus:ring-2 focus:ring-sage/40 disabled:opacity-50"
+                    className="text-sm border border-border rounded-lg px-2 py-1.5 bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-ring/40 disabled:opacity-50"
                   >
                     <option value="minimal">Standard</option>
                     <option value="high">Deep — for complex compositions</option>
                   </select>
                 </div>
-                <label className="flex items-center gap-2 text-sm text-charcoal cursor-pointer select-none">
+                <label className="flex items-center gap-2 text-sm text-foreground cursor-pointer select-none">
                   <input
                     type="checkbox"
                     checked={formValues.grounded}
                     onChange={(e) => setFormValues({ grounded: e.target.checked })}
                     disabled={isGenerating}
-                    className="accent-sage"
+                    className="accent-primary"
                   />
                   Draw from current web knowledge
                 </label>
@@ -376,7 +376,7 @@ export default function GeneratorForm({ onGenerate }: { onGenerate: () => void }
 
       {/* Error */}
       {error && (
-        <div className="rounded-lg bg-red-50 border border-red-200 px-3 py-2.5 text-sm text-red-700 leading-snug">
+        <div className="rounded-lg bg-destructive/10 border border-destructive/20 px-3 py-2.5 text-sm text-destructive leading-snug">
           {error}
         </div>
       )}
@@ -385,11 +385,11 @@ export default function GeneratorForm({ onGenerate }: { onGenerate: () => void }
       <button
         type="submit"
         disabled={!canGenerate}
-        className="w-full py-3 rounded-lg bg-sage text-white font-semibold text-sm hover:bg-sage-hover active:scale-[0.99] transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="w-full py-3 rounded-lg bg-primary text-primary-foreground font-semibold text-sm hover:bg-primary/90 active:scale-[0.99] transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
         {isGenerating ? (
           <>
-            <span className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            <span className="inline-block w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
             {selectedWorkflow ? `Creating ${selectedWorkflow.label.toLowerCase()}…` : "Creating…"} {elapsedSeconds}s
           </>
         ) : (

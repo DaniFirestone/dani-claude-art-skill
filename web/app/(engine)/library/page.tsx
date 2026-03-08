@@ -69,15 +69,15 @@ export default function LibraryPage() {
       {/* Header */}
       <div className="flex items-start justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Asset Library</h1>
-          <p className="text-charcoal-soft text-sm mt-1">
+          <h1 className="text-2xl font-headline font-bold tracking-tight">Asset Library</h1>
+          <p className="text-muted-foreground text-sm mt-1">
             All generated images from campaigns and studio work
           </p>
         </div>
         {history.length > 0 && (
           <button
             onClick={clearHistory}
-            className="text-xs text-charcoal-soft hover:text-red-500 transition-colors flex items-center gap-1"
+            className="text-xs text-muted-foreground hover:text-destructive transition-colors flex items-center gap-1"
           >
             <Trash2 className="w-3.5 h-3.5" />
             Clear studio history
@@ -87,7 +87,7 @@ export default function LibraryPage() {
 
       {/* Filters */}
       <div className="flex items-center gap-4 mb-6">
-        <div className="flex gap-1 bg-cream rounded-xl p-1">
+        <div className="flex gap-1 bg-muted rounded-xl p-1">
           {([
             { id: "all", label: "All" },
             { id: "studio", label: "Studio" },
@@ -99,8 +99,8 @@ export default function LibraryPage() {
               className={cn(
                 "px-3 py-1.5 rounded-lg text-xs font-medium transition-colors",
                 filter === f.id
-                  ? "bg-white text-charcoal shadow-sm"
-                  : "text-charcoal-soft hover:text-charcoal"
+                  ? "bg-card text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
               )}
             >
               {f.label}
@@ -109,26 +109,26 @@ export default function LibraryPage() {
         </div>
 
         <div className="flex-1 max-w-xs relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-charcoal-soft/40" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/40" />
           <input
             type="text"
             placeholder="Search prompts..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-sm bg-white border border-black/5 rounded-xl focus:outline-none focus:ring-2 focus:ring-sage/40"
+            className="w-full pl-9 pr-3 py-2 text-sm bg-card border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-ring/40"
           />
         </div>
 
-        <span className="text-xs text-charcoal-soft">
+        <span className="text-xs text-muted-foreground">
           {assets.length} asset{assets.length !== 1 ? "s" : ""}
         </span>
       </div>
 
       {/* Grid */}
       {assets.length === 0 ? (
-        <div className="border-2 border-dashed border-black/5 rounded-3xl p-16 text-center">
-          <ImageIcon className="w-10 h-10 text-sage/20 mx-auto mb-3" />
-          <p className="text-charcoal-soft">
+        <div className="border-2 border-dashed border-border rounded-3xl p-16 text-center">
+          <ImageIcon className="w-10 h-10 text-primary/20 mx-auto mb-3" />
+          <p className="text-muted-foreground">
             {search ? "No assets match your search" : "No assets yet — generate some in Studio or Campaign"}
           </p>
         </div>
@@ -139,11 +139,11 @@ export default function LibraryPage() {
             return (
               <div
                 key={asset.id}
-                className="bg-white rounded-2xl border border-black/5 overflow-hidden hover:shadow-md transition-shadow group"
+                className="bg-card rounded-2xl border border-border overflow-hidden hover:shadow-md transition-shadow group"
               >
                 {/* Image */}
                 <div
-                  className="relative aspect-square bg-cream cursor-pointer"
+                  className="relative aspect-square bg-muted cursor-pointer"
                   onClick={() => setExpandedId(isExpanded ? null : asset.id)}
                 >
                   <Image
@@ -158,29 +158,29 @@ export default function LibraryPage() {
 
                 {/* Meta */}
                 <div className="p-3 space-y-2">
-                  <p className="text-xs text-charcoal truncate" title={asset.prompt}>
+                  <p className="text-xs text-foreground truncate" title={asset.prompt}>
                     {asset.prompt}
                   </p>
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-medium text-sage bg-sage/10 px-1.5 py-0.5 rounded">
+                    <span className="text-[10px] font-medium text-primary bg-primary/10 px-1.5 py-0.5 rounded">
                       {asset.source}
                     </span>
-                    <span className="text-[10px] text-charcoal-soft">
+                    <span className="text-[10px] text-muted-foreground">
                       {asset.model} &middot; {asset.aspectRatio}
                     </span>
                   </div>
 
                   {isExpanded && (
-                    <div className="flex gap-2 pt-2 border-t border-cream-dark">
+                    <div className="flex gap-2 pt-2 border-t border-border">
                       <button
                         onClick={() => handleDownload(asset.imageUrl)}
-                        className="flex-1 flex items-center justify-center gap-1 py-1.5 text-xs text-sage hover:bg-sage/5 rounded-lg transition-colors"
+                        className="flex-1 flex items-center justify-center gap-1 py-1.5 text-xs text-primary hover:bg-primary/5 rounded-lg transition-colors"
                       >
                         <Download className="w-3.5 h-3.5" /> Download
                       </button>
                       <button
                         onClick={() => handleCopyPrompt(asset.prompt)}
-                        className="flex-1 flex items-center justify-center gap-1 py-1.5 text-xs text-sage hover:bg-sage/5 rounded-lg transition-colors"
+                        className="flex-1 flex items-center justify-center gap-1 py-1.5 text-xs text-primary hover:bg-primary/5 rounded-lg transition-colors"
                       >
                         <Copy className="w-3.5 h-3.5" /> Prompt
                       </button>

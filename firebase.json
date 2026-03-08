@@ -1,8 +1,5 @@
 {
-  "hosting": {
-    "source": "web",
-    "frameworksBackend": {
-      "region": "us-central1"
-    }
+  "apphosting": {
+    "source": "."
   }
 }
