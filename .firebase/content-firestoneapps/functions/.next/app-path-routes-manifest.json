@@ -1,13 +1,13 @@
 {
   "/_not-found/page": "/_not-found",
   "/api/aesthetics/route": "/api/aesthetics",
-  "/api/campaign/generate/route": "/api/campaign/generate",
+  "/api/workflows/route": "/api/workflows",
   "/api/campaign/image/route": "/api/campaign/image",
   "/api/generate/route": "/api/generate",
-  "/api/workflows/route": "/api/workflows",
-  "/(engine)/brands/page": "/brands",
+  "/api/campaign/generate/route": "/api/campaign/generate",
+  "/(engine)/library/page": "/library",
   "/(engine)/campaign/new/page": "/campaign/new",
-  "/(engine)/page": "/",
   "/(engine)/studio/page": "/studio",
-  "/(engine)/library/page": "/library"
+  "/(engine)/page": "/",
+  "/(engine)/brands/page": "/brands"
 }
