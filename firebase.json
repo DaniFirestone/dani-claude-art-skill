@@ -1,5 +1,17 @@
 {
-  "apphosting": {
-    "source": "."
-  }
+  "apphosting": [
+    {
+      "backendId": "web",
+      "source": ".",
+      "ignore": [
+        "node_modules",
+        ".next",
+        ".firebase",
+        ".git",
+        "web/node_modules",
+        "web/.next",
+        "socialsync-ai/node_modules"
+      ]
+    }
+  ]
 }
